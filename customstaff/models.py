@@ -294,7 +294,7 @@ class SupervisorDetail(models.Model):
 	maxsickleave = models.DecimalField(_("Max. Sick Leave"),max_digits = 4, decimal_places = 1, default = 168, validators=[ MinValueValidator(0), MaxValueValidator(168)])
 	sickleavecounter = models.DecimalField(_("Sick Leave Total"),max_digits = 60, decimal_places = 1, default = 0)
 	casualleave = models.DecimalField(_("Casual Leave Balance"),max_digits = 3, decimal_places = 2, default = 2, validators=[ MinValueValidator(0), MaxValueValidator(20)])
-	annualleave = models.DecimalField(_("Annual Leave Balance"),max_digits = 3, decimal_places = 2, default = 0, validators=[ MinValueValidator(0), MaxValueValidator(20)])
+	annualleave = models.DecimalField(_("Annual Leave Balance"),max_digits = 4, decimal_places = 1, default = 0, validators=[ MinValueValidator(0), MaxValueValidator(100)])
 	maxannualleave = models.DecimalField(_("Max. Annual Leave"),max_digits = 4, decimal_places = 1, default = 0, validators=[ MinValueValidator(0), MaxValueValidator(100)])
 
 	compensatedleave = models.DecimalField(_("Compensated Leave Available (Hours)"),max_digits = 4, decimal_places = 1, default = 0)
