@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap3 %}
+{% block extrahead %}
+{{ form.media }}
+{% endblock %}
+{% block content %}
+<div class="content-section-forapply">
+    <form method='POST' enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class='form-group'>
+            <div style="color: red; font-weight: bold;">{{ form.non_field_errors }}</div>
+            <h3 id='leavetitle'>Leave Request</h3>
+            <small class='text-muted' id='thankyou'></small>
+            <hr>
+            <div class='colforapplyandbalance'>
+                <div class='colapply'>
+                    <!-- <legend class='border-bottom mb-4'> Ka Chi Staff Register </legend> -->
+                    {% if user.is_teacher %}
+                    <div class="starttimefield">{{ form.teachertimeofftype|as_crispy_field }}</div>
+                    {% else %}
+                    <div class="starttimefield">{{ form.nonteachertimeofftype|as_crispy_field }}</div>
+                    {% endif %}
+                    <div class="start">
+                        <div class="starttimefield">{{ form.startdate|as_crispy_field }}</div>
+                        <div class="starttimefield hide" id='input1'>{{ form.starttime|as_crispy_field }}</div>
+                    </div>
+                    <div class="end">
+                        <div class="endtimefield">{{ form.enddate|as_crispy_field }}</div>
+                        <div class="endtimefield hide" id='input2'>{{ form.endtime|as_crispy_field }}</div>
+                    </div>
+                    <div class="check">
+                        <input type="checkbox" id="checkbox1" onclick="changeHideStatus()" />
+                        <label for="checkbox1">Time (Optional)</label>
+                    </div>
+                    <div class="check">
+                        <input type="checkbox" id="checkboxPeriod" onclick="changeHideStatusPeriod()" />
+                        <label for="checkboxPeriod">Period (Optional)</label>
+
+                    </div>
+                    <div class="check">
+                        <input type="checkbox" id="checkboxWholeDay" onclick="wholeDay()"/>
+                        <label for="checkboxWholeDay">Whole Day (Optional)</label>
+                    </div>
+                    {% if user.is_teacher %}
+                    {% if user.is_viceprincipal %}
+                    {% else %}
+                    <div id="hidden_div">{{ form.pickvp|as_crispy_field }}</div>
+                    {% endif %}
+                    {% else %}
+                    <div id="hidden_div">
+                        
+                        {{ form.pickmanager|as_crispy_field }}
+                        {{ form.pickvp|as_crispy_field }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="period hide" id='periodId'>{{ form.period| as_crispy_field }}
+                    <div style="font-weight: lighter; font-style: italic;"> * Hold control or command to select more</div> 
+                </div>
+                <div class='colbalance'>
+                    {% if user.is_nonteacher %}
+                    <h4> My Info</h4>
+                    <table style="width:100%">
+                        <tr class='table'>
+                            <td> Sick Leave Taken</td>
+                            <td> {{ userid.sickleavecounter }} day(s)</td>
+                        </tr>
+                        <tr class='table'>
+                            <td> Annual Leave Balance</td>
+                            <td> {{ userid.annualleave }} day(s)</td>
+                        </tr>
+                        <tr class='table'>
+                            <td> Overtime Balance</td>
+                            <td> {{ userid.compensatedleave }} hour(s)</td>
+                        </tr>
+                        <tr class='table'>
+                            <td> Non-Teacher Ratio</td>
+                            <td> {{ userid.ratio }}</td>
+                        </tr>
+                    </table><br><br>
+                    {% else %}
+                    <h4> My Info</h4>
+                    <table style="width:100%">
+                        <tr class='table'>
+                            <td> Sick Leave Taken</td>
+                            <td> {{ userid.sickleavecounter }} day(s)</td>
+                        </tr>
+                        <tr class='table'>
+                            <td> Casual Leave Balance</td>
+                            <td> {{ userid.casualleave }} day(s)</td>
+                        </tr>
+                    </table><br><br>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="reason">{{ form.reason|as_crispy_field }}</div>
+            <script>
+                $(document).ready(function() {
+                $("#checkbox1").prop('checked', false);
+                // $("#id_nonteachertimeofftype").prop("selectedIndex","Sick Leave");
+                // $("#id_teachertimeofftype").prop("selectedIndex","Sick Leave");
+                $(showDiv('hidden_div', document.getElementById("id_nonteachertimeofftype")));
+                $(showDiv('hidden_div', document.getElementById("id_teachertimeofftype")));
+                $(changeHideStatus());
+                $(console.log("checking else"));
+                $("#id_pickvp").prop("selectedIndex","");
+                $("#id_pickmanager").prop("selectedIndex","");
+                $("#id_pickmanager").prop("required",false);
+                $("#id_pickvp").prop("required",false);
+            });
+
+            let input1;
+            let input2;
+
+            function changeHideStatus() {
+                if (document.getElementById("checkbox1").checked == true) {
+
+                    document.getElementById("input1").setAttribute("class", "starttimefield");
+                    document.getElementById("input2").setAttribute("class", "endtimefield");
+
+                    document.getElementById("id_starttime").value = "";
+                    document.getElementById("id_endtime").value = "";
+                    document.getElementById("checkboxWholeDay").checked = false
+                    document.getElementById("checkboxPeriod").checked = false
+                    changeHideStatusPeriod()
+                    document.getElementById("id_period").value = "";
+
+                    console.log("clicked"+ document.getElementById("id_endtime").value)
+
+                } else {
+                    document.getElementById("input1").setAttribute("class", "hide starttimefield");
+                    document.getElementById("input2").setAttribute("class", "hide endtimefield");
+                    // console.log("unclicked" + document.getElementById("id_endtime").value)
+                    document.getElementById("id_starttime").value = "";
+                    document.getElementById("id_endtime").value = "";
+                    // console.log("unclicked" + document.getElementById("id_endtime").value)
+                }
+ 
+            }
+            function changeHideStatusPeriod() {
+                if (document.getElementById("checkboxPeriod").checked == true) {
+
+                    document.getElementById("periodId").setAttribute("class", "period");
+
+                    document.getElementById("id_period").value = "";
+                    document.getElementById("checkboxWholeDay").checked = false
+                    document.getElementById("checkbox1").checked = false
+                    changeHideStatus()
+                    document.getElementById("id_starttime").value = "";
+                    document.getElementById("id_endtime").value = "";
+
+                    console.log("clicked period"+ document.getElementById("id_period").value)
+                } else {
+                    document.getElementById("periodId").setAttribute("class", "period hide");
+                    document.getElementById("id_period").value = "";
+
+                }
+ 
+            }
+            function wholeDay() {
+                if (document.getElementById("checkboxWholeDay").checked == true) {
+
+                    document.getElementById("checkboxPeriod").checked = false;
+
+                    document.getElementById("checkbox1").checked = false;
+                    changeHideStatusPeriod();
+                    changeHideStatus();
+                } 
+ 
+            }
+
+            function showDiv(divId, element) {
+                document.getElementById(divId).style.display = (element.value == 'Official Leave (Outside)' || element.value == 'Official Leave (In School)' || element.value == 'Overtime') ? 'block' : 'none';
+                console.log("show divfsa")
+                if (element.value == 'Overtime') {
+                    document.getElementById("checkbox1").checked = true;
+                    document.getElementById("leavetitle").innerHTML = "Overtime Request"; 
+                    document.getElementById("thankyou").innerHTML = "~ Thank you for your contribution :)";
+                    console.log("test1");
+                    changeHideStatus();
+                } else {
+                    document.getElementById("checkbox1").checked = false;
+                    document.getElementById("leavetitle").innerHTML = "Leave Request";
+                    changeHideStatus();
+                    console.log("test2");
+                }
+                
+
+                if (element.value == 'Official Leave (Outside)' || element.value == 'Official Leave (In School)') {
+                    document.getElementById("id_pickvp").required = true;
+                    console.log(document.getElementById("id_pickvp").required);
+                    
+                } else {
+                    document.getElementById("id_pickvp").value = "";
+                    document.getElementById("id_pickvp").required = false;
+                    changeHideStatus();
+                    console.log("test4");
+                }
+
+                if ((element.value == 'Overtime' || element.value == 'Official Leave (Outside)' || element.value == 'Official Leave (In School)')) {
+                    document.getElementById("id_pickvp").required = true;
+                    document.getElementById("id_pickmanager").required= true;
+                    console.log("test5");
+                    
+                } else {
+                    document.getElementById("id_pickvp").value = "";
+                    document.getElementById("id_pickmanager").value = "";
+                    document.getElementById("id_pickvp").required = false;
+                    document.getElementById("id_pickmanager").required= false;
+                    changeHideStatus();
+                    console.log("test6");
+                }
+            }
+            </script>
+        </fieldset>
+        <div class='form-group'>
+            <button type="submit" class="btn btn-primary">Apply</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

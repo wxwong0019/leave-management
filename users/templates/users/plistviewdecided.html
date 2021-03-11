@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{{ object_list }}
+<h4>Processed Applications</h4>
+<table style="width:70%">
+<tr class = 'table'>
+    <th >Status</th>
+    <th>Apply Date/Time</th>
+    <th>Name</th>
+    <th>Leave Type</th>
+    <th>Duration</th>
+  </tr>
+{% for stuff in objec_list %}
+	{% if stuff.finalstatus == "Approved" or stuff.finalstatus == "Denied" %}
+		{% if stuff.user.is_nonteacher %}
+		<tr class = 'table'>
+			<td><a href = "{% url 'papprovedecided' myid=stuff.id %}"> {{ stuff.finalstatus }}</td></a>
+			<td> {{ stuff.created_at }}</td>
+			<td> {% for each in stuff.users.all %}{{ each }}<br/>{% empty %}{{ stuff.user.username }} {% endfor %} </td>
+			
+			{% if stuff.nonteacherchangetimeofftype == None %}
+            <td> {{ stuff.alltimeofftype }} {% if stuff.appliedby != None %} <br/> Applied by : {{stuff.appliedby}} {%endif%} </td>
+            {% else %}
+            <td>Changed to: {{ stuff.nonteacherchangetimeofftype }} </td>
+            {% endif %}
+			
+			<td> {{ stuff.startdate }} to {{ stuff.enddate }}</td>
+		</tr>
+		{% else %}
+		<tr class = 'table'>
+			<td><a href = "{% url 'papprovedecided' myid=stuff.id %}"> {{ stuff.finalstatus }}</td></a>
+			<td> {{ stuff.created_at }}</td>
+			<td> {% for each in stuff.users.all %}{{ each }}<br/>{% empty %}{{ stuff.user.username }} {% endfor %} </td>
+			{% if stuff.teacherchangetimeofftype == None %}
+            <td> {{ stuff.alltimeofftype }} {% if stuff.appliedby != None %} <br/> Applied by : {{stuff.appliedby}} {%endif%} </td>
+            {% else %}
+            <td>Changed to: {{ stuff.teacherchangetimeofftype }} </td>
+            {% endif %}
+			<td> {{ stuff.startdate }} to {{ stuff.enddate }}</td>
+		</tr>
+		{% endif%}
+	{% elif stuff.finalstatus == "Canceled"%}
+		{% if stuff.user.is_nonteacher %}
+		<tr class = 'table'>
+			<td> {{ stuff.finalstatus }}</td>
+			<td> {{ stuff.created_at }}</td>
+			<td> {% for each in stuff.users.all %}{{ each }}<br/>{% empty %}{{ stuff.user.username }} {% endfor %} </td>
+			
+			{% if stuff.nonteacherchangetimeofftype == None %}
+            <td> {{ stuff.alltimeofftype }} {% if stuff.appliedby != None %} <br/> Applied by : {{stuff.appliedby}} {%endif%} </td>
+            {% else %}
+            <td>Changed to: {{ stuff.nonteacherchangetimeofftype }} </td>
+            {% endif %}
+			
+			<td> {{ stuff.startdate }} to {{ stuff.enddate }}</td>
+		</tr>
+		{% else %}
+		<tr class = 'table'>
+			<td> {{ stuff.finalstatus }}</td>
+			<td> {{ stuff.created_at }}</td>
+			<td> {% for each in stuff.users.all %}{{ each }}<br/>{% empty %}{{ stuff.user.username }} {% endfor %} </td>
+			{% if stuff.teacherchangetimeofftype == None %}
+            <td> {{ stuff.alltimeofftype }} {% if stuff.appliedby != None %} <br/> Applied by : {{stuff.appliedby}} {%endif%} </td>
+            {% else %}
+            <td>Changed to: {{ stuff.teacherchangetimeofftype }} </td>
+            {% endif %}
+			<td> {{ stuff.startdate }} to {{ stuff.enddate }}</td>
+		</tr>
+		{% endif%}
+	{% endif%}	
+{% endfor %}
+
+</table>
+
+{% endblock %}

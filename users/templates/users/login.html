@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <div class="content-section" style="width: 300px ; margin-left: auto;margin-right: auto;">
+
+	<form method = 'POST'> 
+		{% csrf_token %}
+  	<fieldset class='form-group' >
+  		<legend class='border-bottom mb-1'> Login </legend>
+    	{{ form|crispy }}
+    </fieldset>
+    <div class='form-group'>
+      <button type="submit" class="btn btn-primary">Login</button>
+    </div>
+	</form>
+<div class="border-top pt-3">
+	<small class='text-muted'>
+	 Recomended Browser for this Website : FireFox, Chrome
+	</small>
+</div>
+  </div>
+
+{% endblock %}

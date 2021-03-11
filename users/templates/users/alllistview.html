@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap3 %}
+{% block extrahead %}
+{{ form.media }}
+
+{% endblock %}
+ 
+{% block content %}
+<div style = "font-weight: lighter; font-style:italic;"> View Record > Modify/Cancel/Export </div>
+<div>
+<br>	
+<input  type="checkbox" id="checkbox1" onclick="changeHideStatus()"/>
+<label for="checkbox1">Show Filter</label><br>	
+<div class="endtimefield hide" id='input2'>
+	<form method = "get">
+	  {{myFilter.form|crispy}}
+	  <button class = "btn btn-primary" type = "submit">Search</button>
+	</form>
+	
+	<form method = 'POST' enctype='multipart/form-data'> 
+    {% csrf_token %}
+    <fieldset class='form-group'>
+      <legend class='border-bottom mb-4'> Export to Excel </legend>
+    </fieldset>
+    <div class='form-group'>
+      <button type="submit" class="btn btn-primary" onclick="return confirm('Export the following record as Excel?');" >Export</button>
+    </div>
+  </form>
+
+</div>
+<h3>Modify/Cancel/Export</h3><br/>
+<table style="width:90%">
+  <tr class = 'table'>
+  	<th>ID</th>
+    <th>Apply Date/Time</th>
+    <th>Name</th>
+    <th>Leave Type</th>
+    <th>From</th>
+    <th>To</th>
+    <th>Supervisor Decision</th>
+    <th>Vice Principal Decision</th>
+    <th >Principal Decision</th>
+    <th> Attachment Required</th>
+    <th>Attachment Revieved</th>
+    <th >Modify/Cancel</th>
+  </tr>
+{% for stuff in objec_list %}
+		{% if stuff.user.is_nonteacher %}
+		<tr class = 'table'>
+			<td> {{ stuff.id }}</td>
+			<td> {{ stuff.created_at }}</td>
+			
+			<td> {% for each in stuff.users.all %}{{ each }}<br/>{% empty %}{{ stuff.user.username }} {% endfor %} </td>
+			
+			<td> {{ stuff.alltimeofftype }}</td>
+			{% if stuff.starttime == None and stuff.endtime == None %}
+				<td> {{ stuff.startdate}}</td>
+				<td> {{ stuff.enddate}}</td>
+			{% else %}
+				<td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
+				<td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
+			{% endif %}	
+			<td> {{ stuff.firststatus }}</td>
+			<td> {{ stuff.secondstatus }}</td>
+			<td>{{ stuff.finalstatus }}</td>
+			<td> {{ stuff.attachmentrequired}} </td>
+			<td> {{ stuff.attachmentreceived}} </td>
+			<td><a href = "{% url 'alldetailview' myid=stuff.id %}">Click</td></a>
+		</tr>
+		{% else %}
+		<tr class = 'table'>
+			<td> {{ stuff.id }}</td>
+			<td> {{ stuff.created_at }}</td>
+			<td> {% for each in stuff.users.all %}{{ each }}<br/>{% empty %}{{ stuff.user.username }} {% endfor %} </td>
+			<td> {{ stuff.alltimeofftype }}</td>
+			{% if stuff.starttime == None and stuff.endtime == None %}
+				<td> {{ stuff.startdate}}</td>
+				<td> {{ stuff.enddate}}</td>
+			{% else %}
+				<td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
+				<td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
+			{% endif %}	
+			<td> Not Applicable</td>
+			<td> {{ stuff.secondstatus }}</td>
+			<td>{{ stuff.finalstatus }}</td>
+			<td> {{ stuff.attachmentrequired}} </td>
+			<td> {{ stuff.attachmentreceived}} </td>
+			<td><a href = "{% url 'alldetailview' myid=stuff.id %}">Click</a></td>
+		</tr>
+		{% endif%}
+{% endfor %}
+</table>
+
+<script>
+      $(document).ready(function(){
+        $("#checkbox1").prop('checked', false);
+        // changevp();
+      });
+
+      let input1;
+      let input2;
+
+      function changeHideStatus(){
+        
+        if(document.getElementById("checkbox1").checked == true){
+
+          document.getElementById("input2").setAttribute("class", "endtimefield");
+          
+          console.log(document.getElementById("id_pickvp").value)
+          
+        }
+        else{
+          document.getElementById("input2").setAttribute("class", "hide endtimefield");          
+          console.log(document.getElementById("id_pickvp").value)
+        }
+      }
+
+    </script>
+</div>
+{% endblock %}

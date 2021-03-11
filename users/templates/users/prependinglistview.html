@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{{ object_list }}
+
+<div style = "font-weight: lighter; font-style:italic;"> View Application > Pre-Pending Applicaitons </div> 
+<h4>Pre-Pending Applications:</h4>
+<table style="width:90%">
+<tr class = 'table'>
+    <th>Action</th>
+    <th>Apply Date/Time</th>
+    <th>Name</th>
+    <th>Leave Type</th>
+    <th>From</th>
+    <th>To</th>
+    <th>Vice Principal Decision</th>
+    <th>Direct Supervisor</th>
+  </tr>
+{% for stuff in objec_list %}
+		<tr class = 'table'>
+			<td><a href = "{% url 'prependingdetailview' myid=stuff.id %}"> Check detail </a></td>
+			<td> {{ stuff.created_at }}</td>
+			<td> {{ stuff.user.username }} </td>
+			<td> {{ stuff.alltimeofftype }}</td>
+			{% if stuff.starttime == None and stuff.endtime == None %}
+				<td> {{ stuff.startdate}}</td>
+				<td> {{ stuff.enddate}}</td>
+			{% else %}
+				<td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
+				<td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
+			{% endif %}	
+			<td> {{ stuff.secondstatus }}</td>
+			<td> {{ stuff.firststatus }}</td>
+		</tr>
+
+{% endfor %}
+
+</table>
+{% endblock %}

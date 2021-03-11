@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap3 %}
+{% block extrahead %}
+{{ form.media }}
+{% endblock %}
+{% block content %}
+<!-- <div class = 'profiledetail'>
+  
+  {% if user.is_nonteacher %}
+  <h4> My Application Record</h4>
+  <h5> Name: {{ userid.user }}</h5>
+  <h5> Sick Leave Taken (day(s)): {{ userid.sickleavecounter }}</h5>
+  <h5> Annual Leave Balance (day(s)): {{ userid.annualleave }}</h5>
+  <h5> Compensated Leave Balance (hour(s)): {{ userid.compensatedleave }}</h5>
+  {% else %}
+  <h4> My Application Record</h4>
+  <h5> Name: {{ userid.user }}</h5>
+  <h5> Sick Leave Taken (day(s)): {{ userid.sickleavecounter }}</h5>
+  <h5> Over Time Balance (hour(s)): {{ userid.casualleave }}</h5><br><br>
+  {% endif %}
+</div> --> 
+<div class='profiledetail'>
+    
+    {% if user.is_nonteacher %}
+    <h4> My Application Record</h4>
+    <table style="width:30%">
+        <tr class='table'>
+            <td> Sick Leave Taken</td>
+            <td> {{ userid.sickleavecounter }} day(s)</td>
+        </tr>
+        <tr class='table'>
+            <td> Annual Leave Balance</td>
+            <td> {{ userid.annualleave }} day(s)</td>
+        </tr>
+        <tr class='table'>
+            <td> Over Time Balance</td>
+            <td> {{ userid.compensatedleave }} hour(s)</td>
+        </tr>
+        <tr class='table'>
+            <td> Non-Teacher Ratio</td>
+            <td> {{ userid.ratio }}</td>
+        </tr>
+    </table><br><br>
+    {% else %}
+    <h4> My Application Record </h4>
+    <table style="width:30%">
+        <tr class='table'>
+            <td> Sick Leave Taken</td>
+            <td> {{ userid.sickleavecounter }} day(s)</td>
+        </tr>
+        <tr class='table'>
+            <td> Casual Leave Balance</td>
+            <td> {{ userid.casualleave }} day(s)</td>
+        </tr>
+    </table><br><br>
+    {% endif %}
+</div>
+<hr>
+<!-- <form method = "get">
+
+  {{myFilter.form|crispy}}
+
+  <button class = "btn btn-primary" type = "submit">Search</button>
+</form>
+ -->
+<div class='profileapplication'>
+    <h4> Application made by Office (You need to confirm the following Leave) :</h4>
+    <table style="width:100%">
+        <tr class='table'>
+            <th>Apply Date/Time</th>
+            <th>Leave Type</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Duration</th>
+            <th style="font-weight: bold; color: red">Action Required</th>
+        </tr>
+        {% for stuff in applicant %}
+        {% if stuff.finalstatus == "Action Required" %}
+        <tr class='table'>
+            <td> {{ stuff.created_at }}</td>
+            <td> {{ stuff.alltimeofftype }}</td>
+            {% if stuff.starttime == None and stuff.endtime == None %}
+            <td> {{ stuff.startdate}}</td>
+            <td> {{ stuff.enddate}}</td>
+            {% else %}
+            <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
+            <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
+            {% endif %}
+            {% if stuff.alltimeofftype == "Over Time" %}
+            <td> {{ stuff.duration }} hour(s)</td>
+            {% else %}
+            <td> {{ stuff.duration }} day(s)</td>
+            {% endif %}
+            <td><a href="{% url 'profileapprove' myid=stuff.id %}">Please Confirm</a></td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </table><br><br>
+    <h4>Pending Application : </h4>
+    <table style="width:100%">
+        <tr class='table'>
+            <th>Apply Date/Time</th>
+            <th>Leave Type</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Duration</th>
+            {% if user.is_nonteacher %}
+            <th>Direct Supervisor</th>
+            {% endif %}
+            {% if not user.is_viceprincipal %}
+            <th>Vice Principal Decision</th>
+            {% endif %}
+            <th>Principal Decision</th>
+            <th>Detail/Cancel</th>
+        </tr>
+        {% for stuff in applicant %}
+          {% if stuff.pickmanager != None and stuff.firststatus == "Denied"  or stuff.secondstatus == "Denied" %} 
+          {% else %}
+            {% if stuff.finalstatus == "Pending" %}
+              {% if stuff.user.is_nonteacher %}
+                
+                  <tr class='table'>
+                      <td> {{ stuff.created_at }}</td>
+                      <td> {{ stuff.alltimeofftype }} {% if stuff.appliedby != None %} <br/> Applied by : {{stuff.appliedby}} {%endif%} </td>
+                      {% if stuff.starttime == None and stuff.endtime == None %}
+                      <td> {{ stuff.startdate}}</td>
+                      <td> {{ stuff.enddate}}</td>
+                      {% else %}
+                      <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
+                      <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
+                      {% endif %}
+                      {% if stuff.alltimeofftype == "Over Time" %}
+                      <td> {{ stuff.duration }} hour(s)</td>
+                      {% else %}
+                      <td> {{ stuff.duration }} day(s)</td>
+                      {% endif %}
+                      {% if user.is_nonteacher %}
+                      <td> {{ stuff.firststatus }}</td>
+                      {% endif %}
+                      {% if not user.is_viceprincipal %}
+                      <td> {{ stuff.secondstatus }}</td>
+                      {% endif %}
+                      <td> {{ stuff.finalstatus }}</td>
+                      <td><a href="{% url 'profiledetail' myid=stuff.id %}"> View</a></td>
+                  </tr>
+              {% else %}
+              <tr class='table'>
+                  <td> {{ stuff.created_at }}</td>
+                  <td> {{ stuff.alltimeofftype }} {% if stuff.appliedby != None %} <br/> Applied by : {{stuff.appliedby}} {%endif%} </td>
+                  {% if stuff.starttime == None and stuff.endtime == None %}
+                  <td> {{ stuff.startdate}}</td>
+                  <td> {{ stuff.enddate}}</td>
+                  {% else %}
+                  <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
+                  <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
+                  {% endif %}
+                  {% if stuff.alltimeofftype == "Over Time" %}
+                  <td> {{ stuff.duration }} hour(s)</td>
+                  {% else %}
+                  <td> {{ stuff.duration }} day(s)</td>
+                  {% endif %}
+                  {% if user.is_nonteacher %}
+                  <td> {{ stuff.firststatus }}</td>
+                  {% endif %}
+                  {% if not user.is_viceprincipal %}
+                  <td> {{ stuff.secondstatus }}</td>
+                  {% endif %}
+                  <td> {{ stuff.finalstatus }}</td>
+                  <td><a href="{% url 'profiledetail' myid=stuff.id %}"> View</a></td>
+              </tr>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+    </table><br><br>
+    <h4>Final Decision : </h4>
+    <table style="width:100%">
+        <tr class='table'>
+            <th>Apply Date/Time</th>
+            <th>Leave Type</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Duration</th>
+            {% if user.is_nonteacher %}
+            <th>Direct Supervisor</th>
+            {% endif %}
+            {% if not user.is_viceprincipal %}
+            <th>Vice Principal Decision</th>
+            {% endif %}
+            <th>Principal Decision</th>
+            <th>Detail</th>
+        </tr>
+        {% for stuff in applicant %}
+        {% if stuff.finalstatus == "Approved" or stuff.finalstatus == "Denied" or stuff.finalstatus == "Canceled" or stuff.pickmanager != None and stuff.firststatus == "Denied"  or stuff.secondstatus == "Denied" %}
+        {% if stuff.user.is_nonteacher %}
+        <tr class='table'>
+            <td> {{ stuff.created_at }}</td>
+            {% if stuff.nonteacherchangetimeofftype == None %}
+            <td> {{ stuff.alltimeofftype }} {% if stuff.appliedby != None %} <br/> Applied by : {{stuff.appliedby}} {%endif%} </td>
+            {% else %}
+            <td>Changed to: {{ stuff.nonteacherchangetimeofftype }} </td>
+            {% endif %}
+            {% if stuff.starttime == None and stuff.endtime == None %}
+            <td> {{ stuff.startdate}}</td>
+            <td> {{ stuff.enddate}}</td>
+            {% else %}
+            <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
+            <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
+            {% endif %}
+            {% if stuff.nonteachertimeofftype == "Overtime" or stuff.nonteachertimeofftype == "Overtime Compensatory Leave" or stuff.nonteacherchangetimeofftype == "Overtime Compensatory Leave" %}
+            <td> {{ stuff.finalduration }} hour(s)</td>
+            {% else %}
+            <td> {{ stuff.finalduration }} day(s)</td>
+            {% endif %}
+            {% if user.is_nonteacher %}
+            <td> {{ stuff.firststatus }}</td>
+            {% endif %}
+            {% if not user.is_viceprincipal %}
+            <td> {{ stuff.secondstatus }}</td>
+            {% endif %}
+            <td> {{ stuff.finalstatus }}</td>
+            <td><a href="{% url 'profiledetail' myid=stuff.id %}"> Detail </a></td>
+        </tr>
+        {% else %}
+        <tr class='table'>
+            <td> {{ stuff.created_at }}</td>
+            {% if stuff.teacherchangetimeofftype == None %}
+            <td> {{ stuff.alltimeofftype }} {% if stuff.appliedby != None %} <br/> Applied by : {{stuff.appliedby}} {%endif%} </td>
+            {% else %}
+            <td>Changed to: {{ stuff.teacherchangetimeofftype }} </td>
+            {% endif %}
+            {% if stuff.starttime == None and stuff.endtime == None %}
+            <td> {{ stuff.startdate}}</td>
+            <td> {{ stuff.enddate}}</td>
+            {% else %}
+            <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
+            <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
+            {% endif %}
+            {% if stuff.nonteachertimeofftype == "Over Time" %}
+            <td> {{ stuff.finalduration }} hour(s)</td>
+            {% else %}
+            <td> {{ stuff.finalduration }} day(s)</td>
+            {% endif %}
+            {% if user.is_nonteacher %}
+            <td> {{ stuff.firststatus }}</td>
+            {% endif %}
+            {% if not user.is_viceprincipal %}
+            <td> {{ stuff.secondstatus }}</td>
+            {% endif %}
+            <td> {{ stuff.finalstatus }}</td>
+            <td><a href="{% url 'profiledetail' myid=stuff.id %}"> Detail </a></td>        </tr>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

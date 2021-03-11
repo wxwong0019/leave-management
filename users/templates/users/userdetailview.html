@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{{ object_list }}
+
+<div>
+<div style = "font-weight: lighter; font-style:italic;"> View Application > <a href="{% url 'userlistview' %}">All Users </a> > {{ obj.username }} </div> <br>
+<h4> Name : {{ userInfo.user.username }}</h4>
+	{% if obj.is_nonteacher %}
+	    <table style="width:100%">
+	        <tr class='table'>
+	            <td> Sick Leave Balance</td>
+	            <td> {{ userInfo.sickleave }} day(s)</td>
+	        </tr>
+	        <tr class='table'>
+	            <td> Sick Leave Taken</td>
+	            <td> {{ userInfo.sickleavecounter }} day(s)</td>
+	        </tr>
+	        <tr class='table'>
+	            <td> Annual Leave Balance</td>
+	            <td> {{ userInfo.annualleave }} day(s)</td>
+	        </tr>
+	        <tr class='table'>
+	            <td> Annual Leave Taken</td>
+	            <td> {{ annualleavetaken }} day(s)</td>
+	        </tr>
+	        <tr class='table'>
+	            <td> Overtime Balance</td>
+	            <td> {{ userInfo.compensatedleave }} hour(s)</td>
+	        </tr>
+	        <tr class='table'>
+	            <td> Non-Teacher Ratio</td>
+	            <td> {{ userInfo.ratio }}</td>
+	        </tr>
+	    </table><br><br>
+	    {% else %}
+	    <table style="width:100%">
+	        <tr class='table'>
+	            <td> Sick Leave Balance</td>
+	            <td> {{ userInfo.sickleave }} day(s)</td>
+	        </tr>
+	        <tr class='table'>
+	            <td> Sick Leave Taken</td>
+	            <td> {{ userInfo.sickleavecounter }} day(s)</td>
+	        </tr>
+	        <tr class='table'>
+	            <td> Casual Leave Balance</td>
+	            <td> {{ userInfo.casualleave }} day(s)</td>
+	        </tr>
+	    </table><br><br>
+            {% endif %}
+
+<table style="width:90%">
+<tr class = 'table'>
+
+    <th>Apply Date/Time</th>
+    <th>Leave Type</th>
+    <th>Start/End Date</th>
+    <th>Duration</th>
+    <th>Direct Supervisor</th>
+    <th>Vice Principal Decision</th>
+    <th>Principal Decision</th>
+  </tr>
+{% for stuff in applicant %}
+	{% if stuff.user.is_nonteacher %}
+		<tr class = 'table'>
+			<td> {{ stuff.created_at }}</td>
+
+			{% if stuff.nonteacherchangetimeofftype == None %}
+            <td> {{ stuff.alltimeofftype }} {% if stuff.appliedby != None %} <br/> Applied by : {{stuff.appliedby}} {%endif%} </td>
+            {% else %}
+            <td>Changed to: {{ stuff.nonteacherchangetimeofftype }} </td>
+            {% endif %}
+
+			<td> {{ stuff.startdate }} to {{ stuff.enddate }}</td>
+			
+
+			{% if stuff.finalduration == None %}
+				{% if stuff.nonteachertimeofftype == "Overtime" or stuff.nonteachertimeofftype == "Overtime Compensatory Leave" or stuff.nonteacherchangetimeofftype == "Overtime Compensatory Leave" %}
+	            <td> {{ stuff.duration }} hour(s)</td>
+	            {% else %}
+	            <td> {{ stuff.duration }} day(s)</td>
+	            {% endif %}
+
+          	{% else %}
+            	
+	          	{% if stuff.nonteachertimeofftype == "Overtime" or stuff.nonteachertimeofftype == "Overtime Compensatory Leave" or stuff.nonteacherchangetimeofftype == "Overtime Compensatory Leave" %}
+	            <td> {{ stuff.finalduration }} hour(s)</td>
+	            {% else %}
+	            <td> {{ stuff.finalduration }} day(s)</td>
+	            {% endif %}
+
+         	{% endif %}
+			<td> {{ stuff.firststatus }}</td>
+			<td> {{ stuff.secondstatus }}</td>
+			<td> {{ stuff.finalstatus }}</td>
+		</tr> 
+	{% else %}
+		<tr class = 'table'>
+			<td> {{ stuff.created_at }}</td>
+			{% if stuff.teacherchangetimeofftype == None %}
+            <td> {{ stuff.alltimeofftype }} {% if stuff.appliedby != None %} <br/> Applied by : {{stuff.appliedby}} {%endif%} </td>
+            {% else %}
+            <td>Changed to: {{ stuff.teacherchangetimeofftype }} </td>
+            {% endif %}
+			<td> {{ stuff.startdate }} to {{ stuff.enddate }}</td>
+			{% if stuff.finalduration == None %}
+            	<td> {{ stuff.duration }} day(s)</td>
+          	{% else %}
+            	<td> {{ stuff.finalduration }} day(s)</td>
+         	{% endif %}
+			<td> Not Applicable</td>
+			<td> {{ stuff.secondstatus }}</td>
+			<td> {{ stuff.finalstatus }}</td>
+		</tr>
+	{% endif %}
+{% endfor %}
+
+</table>
+</td>
+		
+{% endblock %}

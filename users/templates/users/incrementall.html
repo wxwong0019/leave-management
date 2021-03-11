@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap3 %}
+
+{% block extrahead %}
+{{ form.media }}
+{% endblock %}
+
+{% block content %}
+<!--  -->
+
+<div class="content-section">
+  <div style = "font-weight: lighter; font-style:italic;"> Leave Increment > Monthly Sick Leave Increment</div>  
+  <form method = 'POST' enctype='multipart/form-data' onsubmit="return confirm('Just want to make sure DID YOU DOUBLE CHECK?');"> 
+    {% csrf_token %}
+    <fieldset class='form-group'>
+      <legend class='border-bottom mb-4'> Monthly Sick Leave Increment </legend>
+      {{ form.created_at|as_crispy_field }}
+
+    </fieldset>
+    <div class='form-group'>
+      <button type="submit" class="btn btn-primary" onclick="return confirm('*** WARNING : Check your entry as this is an irreversible action. Do you really want to submit? ***');" >Save</button>
+    </div>
+  </form>
+
+</div>
+{% endblock %}

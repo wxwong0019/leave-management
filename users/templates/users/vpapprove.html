@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+<!--  -->
+<div class="content-section">
+    <div class="media">
+        <div class="media-body">
+            <div class='colforapplyandbalance'>
+                <div class='colapply'>
+                    <h4>Manage Application</h4>
+                    <h4> Applicant : {% for each in obj.users.all %}{{ each }}  {% empty %}{{ applicant.user.username }} {% endfor %}</h4>
+                    <p class="text-secondary">Type of Leave : {{ obj.alltimeofftype }}</p>
+
+                    {% if obj.starttime != None and obj.endtime != None %}
+                    <p class="text-secondary">From : {{ obj.startdate }}    {{ obj.starttime }}</p>
+                    <p class="text-secondary">To : {{ obj.enddate }}    {{ obj.endtime }}</p>
+                    {% else %}
+                    <p class="text-secondary">From : {{ obj.startdate }}</p>
+                    <p class="text-secondary">To : {{ obj.enddate }}</p>
+                    {% endif %}
+                    {% if obj.nonteachertimeofftype == 'Over Time' %}
+                    <p class="text-secondary">Estimated Hour (hrs): {{ obj.duration }}</p>
+                    {% else %}
+                    <p class="text-secondary">Estimated Day (days): {{ obj.duration }}</p>
+                    {% endif %}
+                    <p class="text-secondary"> Reason : {{ obj.reason }}</p>
+                    {% if obj.period != "[]" %}
+                    <p class="font-weight-bold"> Period : {{ obj.period}}</p>
+                    {% endif %}<br>
+                    {% if obj.user.is_nonteacher %}
+                    <h5 class="account-heading">Supervisor Validation: {{ obj.firststatus }}</h5>
+                    {% endif %}
+                    <!-- <p class="text-secondary">{{ obj.firststatus }}</p> -->
+                    {% if obj.firstcomment != None %}
+                    <p class="text-secondary"> {{ obj.firstcomment }}</p><br>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class='colbalance'>
+            <!-- {% if applicant.is_nonteacher %}
+            <h4> Applicant : {% for each in applicant.users.all %}{{ each }}<br/>{% empty %}{{ applicant.user.username }} {% endfor %}</h4>
+            <table style="width:100%">
+                <tr class='table'>
+                    <td> Sick Leave Balance</td>
+                    <td> {{ applicant.sickleave }} day(s)</td>
+                </tr>
+                <tr class='table'>
+                    <td> Annual Leave Balance</td>
+                    <td> {{ applicant.annualleave }} day(s)</td>
+                </tr>
+                <tr class='table'>
+                    <td> Compensated Leave Balance</td>
+                    <td> {{ applicant.compensatedleave }} day(s)</td>
+                </tr>
+                <tr class='table'>
+                    <td> Non-Teacher Ratio</td>
+                    <td> {{ applicant.ratio }}</td>
+                </tr>
+            </table><br><br>
+            {% else %}
+            <h4> Applicant : {{ applicant.user }}</h4>
+            <table style="width:100%">
+                <tr class='table'>
+                    <td> Sick Leave Balance</td>
+                    <td> {{ applicant.sickleave }} day(s)</td>
+                </tr>
+                <tr class='table'>
+                    <td> Casual Leave Balance</td>
+                    <td> {{ applicant.casualleave }} day(s)</td>
+                </tr>
+            </table><br><br>
+            {% endif %}
+            <hr /> -->
+        </div>
+    </div>
+    <form method='POST' enctype='multipart/form-data'>
+        {% csrf_token %}
+        <fieldset class='form-group'>
+            <legend class='border-bottom mb-4'> Vice Principal Validation </legend>
+            {% if obj.alltimeofftype == 'Official Leave (In School)' or obj.alltimeofftype == 'Official Leave (Outside)' or obj.alltimeofftype == 'Over Time' %}
+            <input type="checkbox" id="checkbox1" onclick="changeHideStatus()" />
+            <label for="checkbox1">Reassign Application</label><br>
+            <div class="endtimefield hide" id='input2'>{{ u_form.pickvp|as_crispy_field }}</div>
+            {% endif %}
+            <div class="starttimefield" id='input1'>{{ u_form.secondstatus|as_crispy_field }}</div>
+            {{ u_form.secondcomment|as_crispy_field }}
+        </fieldset>
+        <div class='form-group'>
+            <button type="submit" class="btn btn-primary" onclick="return confirm('*** WARNING : Check your entry as this is an irreversible action. Do you really want to submit? ***');">Save</button>
+        </div>
+    </form>
+</div>
+<script>
+$(document).ready(function() {
+    $("#checkbox1").prop('checked', false);
+    // changevp();
+});
+
+let input1;
+let input2;
+
+function changeHideStatus() {
+
+    if (document.getElementById("checkbox1").checked == true) {
+
+        document.getElementById("input1").setAttribute("class", "hide starttimefield");
+        document.getElementById("input2").setAttribute("class", "endtimefield");
+        document.getElementById("id_secondstatus").value = "Pending";
+        if (document.getElementById("id_pickvp").value == 20) {
+            document.getElementById("id_pickvp").value = 18;
+        } else {
+            document.getElementById("id_pickvp").value = 20;
+        }
+        console.log(document.getElementById("id_pickvp").value)
+
+    } else {
+        document.getElementById("input1").setAttribute("class", " starttimefield");
+        document.getElementById("input2").setAttribute("class", "hide endtimefield");
+        document.getElementById("id_secondstatus").value = "Pending"
+        if (document.getElementById("id_pickvp").value == 20) {
+            document.getElementById("id_pickvp").value = 18;
+        } else {
+            document.getElementById("id_pickvp").value = 20;
+        }
+        console.log(document.getElementById("id_pickvp").value)
+    }
+}
+</script>
+{% endblock %}
+<!-- 
+<h1>In app template : {{ objec.user.username }}</h1>
+<p>{{objec.timeofftype}}</p>
+<p>{{objec.startdate}} </p>
+<p>{{objec.enddate}} </p>
+<p>{{objec.duration}} </p>
+<p>{{objec.reason}} </p>
+<p>{{objec.firststatus}} </p>
+ -->

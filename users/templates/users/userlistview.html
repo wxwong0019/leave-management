@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+{{ object_list }}
+<div>
+    <div style="font-weight: lighter; font-style:italic;"> View Application > All Users </div>
+    <br>
+    <h4>All Users</h4>
+    <table style="width:20%">
+        <tr class='table'>
+            <th>Name</th>
+            
+        </tr>
+        {% for stuff in objec_list %}
+        <tr class='table'>
+            <td><a href="{% url 'userdetailview' myid=stuff.id %}"> {{ stuff.username }}</a></td>
+         
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

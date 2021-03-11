@@ -1,0 +1,24 @@
+      {% extends 'base.html' %}
+
+      {% block content %}
+      <form action="submit">
+       <fieldset>
+          <p>
+             <label for="startdate">From:</label>
+             <input id="startdate" type ="date" placeholder="Enter a date DD/MM/YY">
+             <br><br>
+             
+             <label for="enddate">To:</label>
+            <input id="enddate" type ="date" placeholder="Enter a date DD/MM/YY">
+             <br><br>
+             <label for="myList">Reason:</label>
+             <select id = "myList" >
+              <option value = "1">Please choose</option>
+               <option value = "2">Annual Leave</option>
+               <option value = "3">Sick Leave</option>
+             </select>
+             <button type="submit" value = "Submit">Submit</button>
+          </p>
+       </fieldset>
+    </form>
+    {% endblock %}

@@ -1,0 +1,386 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap3 %}
+{% block extrahead %}
+{{ form.media }}
+{% endblock %}
+{% block content %}
+<!--  -->
+
+    <div class="content-section">
+      <div style = "font-weight: lighter; font-style:italic;"> <a href="{% url 'profile' %}">My Application</a> > Detail</div>
+      <div class="media">
+        <div class="media-body">
+            <div class='colforapplyandbalance'>
+                <div class='colapply'>
+                   
+                    <h4> {{ obj.alltimeofftype }}</h4>
+
+                    {% if obj.starttime != None and obj.endtime != None %}
+                    <p class="text-secondary">From : {{ obj.startdate }} - {{ obj.starttime }}</p>
+                    <p class="text-secondary">To : {{ obj.enddate }} - {{ obj.endtime }}</p>
+                    {% else %}
+                    <p class="text-secondary">From : {{ obj.startdate }}</p>
+                    <p class="text-secondary">To : {{ obj.enddate }}</p>
+                    {% endif %}
+                    {% if obj.nonteachertimeofftype == 'Over Time' %}
+                    <p class="text-secondary">Estimated Hour (calculated By AI, will be verified by Human) : {{ obj.duration }} hr(s)</p>
+                    {% else %}
+                    <p class="text-secondary">Estimated Day (calculated By AI, will be verified by Human): {{ obj.duration }} day(s)</p>
+                    {% endif %}
+                    
+                    <p class="text-secondary"> Reason : {{ obj.reason }}</p>
+                    {% if obj.period != "[]" %}
+                    <p class="font-weight-bold"> Period : {{ obj.period}}</p>
+                    {% endif %}<br>
+                    {% if user.is_nonteacher %}
+                    <h5 class="account-heading">Supervisor Validation: {{ obj.firststatus }}</h5>
+                    {% endif %}
+                    <!-- <p class="text-secondary">{{ obj.firststatus }}</p> -->
+                    {% if obj.firstcomment != None %}
+                    <p class="text-secondary"> {{ obj.firstcomment }}</p><br>
+                    {% endif %}
+                    <h5 class="account-heading">Vice Principal Validation: {{ obj.secondstatus }}</h5>
+                    <!-- <p class="text-secondary">Vice Principal Approval Status : {{ obj.secondstatus }}</p> -->
+                    {% if obj.secondcomment != None %}
+                    <p class="text-secondary"> {{ obj.secondcomment }}</p><br>
+                    {% endif %}
+                    <h5 class="account-heading">Principal Validation: {{ obj.finalstatus }}</h5>
+                </div>
+            </div>
+        </div>      </div>
+    
+    {% if obj.finalstatus == "Pending" and obj.secondstatus == "Pending" and obj.firststatus == "Pending"%}
+
+        {% if obj.appliedby == None %}
+        <div class="content-section-forapply">
+        <form method='POST' enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class='form-group'>
+                <div style="color: red; font-weight: bold;">{{ form.non_field_errors }}</div>
+                <h3 id='leavetitle'>Modify Leave Request</h3>
+                <small class='text-muted' id='thankyou'></small>
+                <hr>
+                <div class='colforapplyandbalance'>
+                    <div class='colapply'>
+                        <!-- <legend class='border-bottom mb-4'> Ka Chi Staff Register </legend> -->
+                        {% if user.is_teacher %}
+                        <div class="starttimefield">{{ form.teachertimeofftype|as_crispy_field }}</div>
+                        {% else %}
+                        <div class="starttimefield">{{ form.nonteachertimeofftype|as_crispy_field }}</div>
+                        {% endif %}
+                        <div class="start">
+                            <div class="starttimefield">{{ form.startdate|as_crispy_field }}</div>
+                            <div class="starttimefield hide" id='input1'>{{ form.starttime|as_crispy_field }}</div>
+                        </div>
+                        <div class="end">
+                            <div class="endtimefield">{{ form.enddate|as_crispy_field }}</div>
+                            <div class="endtimefield hide" id='input2'>{{ form.endtime|as_crispy_field }}</div>
+                        </div>
+                        <div class="check">
+                            <input type="checkbox" id="checkbox1" onclick="changeHideStatus()" />
+                            <label for="checkbox1">Time Option</label>
+                        </div>
+                        {% if user.is_teacher %}
+                        {% if user.is_viceprincipal %}
+                        {% else %}
+                        <div id="hidden_div">{{ form.pickvp|as_crispy_field }}</div>
+                        {% endif %}
+                        {% else %}
+                        <div id="hidden_div">
+                            {{ form.pickvp|as_crispy_field }}
+                            {{ form.pickmanager|as_crispy_field }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="period">{{ form.period| as_crispy_field }}</div>
+                    
+                </div>
+                <div class="reason">{{ form.reason|as_crispy_field }}</div>
+            </fieldset>
+            <div class='form-group'>
+                <button name="modify" type="submit" class="btn btn-primary">Modify</button>
+            </div>
+        </form>
+        {% endif %}
+          </div>
+          
+              <hr>
+        {% if obj.groupapplystatus == False and obj.appliedby == None or obj.groupapplystatus == True and obj.appliedby == obj.user %}
+          <form method = 'POST' enctype='multipart/form-data' onsubmit="return confirm('Just want to make sure DID YOU DOUBLE CHECK?');"> 
+            {% csrf_token %}
+            <fieldset class='form-group'>
+              <legend class='border-bottom mb-4'> Cancel Application </legend>
+              {{ u_form|crispy }}
+
+            </fieldset>
+            <div class='form-group'>
+              <button name="cancel" type="submit" class="btn btn-primary" onclick="return confirm('*** WARNING : Check your entry as this is an irreversible action. Do you really want to submit? ***');" >Cancel</button>
+            </div>
+          </form>
+        {% else %}
+          <form> 
+            <fieldset class='form-group'>
+              <legend class='border-bottom mb-4'> Cancel Application </legend>
+              <div style="font-weight: lighter; ">**Please contact Secretary to Cancel**</div>
+            </fieldset>
+            <div class='form-group'>
+              <button type="submit" class="btn btn-primary" disabled="">Cancel</button>
+            </div>
+          </form>
+
+        {% endif %}
+
+    {% elif obj.finalstatus == "Pending" and obj.secondstatus == "Approved" and obj.is_viceprincipal or obj.finalstatus == "Pending" and obj.secondstatus == "Pending" and obj.firststatus == "Approved" and obj.is_supervisor %}
+
+    {% if obj.appliedby == None %}
+    <div class="content-section-forapply">
+    <form method='POST' enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class='form-group'>
+            <div style="color: red; font-weight: bold;">{{ form.non_field_errors }}</div>
+            <h3 id='leavetitle'>Modify Leave Request</h3>
+            <small class='text-muted' id='thankyou'></small>
+            <hr>
+            <div class='colforapplyandbalance'>
+                <div class='colapply'>
+                    <!-- <legend class='border-bottom mb-4'> Ka Chi Staff Register </legend> -->
+                    {% if user.is_teacher %}
+                    <div class="starttimefield">{{ form.teachertimeofftype|as_crispy_field }}</div>
+                    {% else %}
+                    <div class="starttimefield">{{ form.nonteachertimeofftype|as_crispy_field }}</div>
+                    {% endif %}
+                    <div class="start">
+                        <div class="starttimefield">{{ form.startdate|as_crispy_field }}</div>
+                        <div class="starttimefield hide" id='input1'>{{ form.starttime|as_crispy_field }}</div>
+                    </div>
+                    <div class="end">
+                        <div class="endtimefield">{{ form.enddate|as_crispy_field }}</div>
+                        <div class="endtimefield hide" id='input2'>{{ form.endtime|as_crispy_field }}</div>
+                    </div>
+                    <div class="check">
+                        <input type="checkbox" id="checkbox1" onclick="changeHideStatus()" />
+                        <label for="checkbox1">Time Option</label>
+                    </div>
+                    {% if user.is_teacher %}
+                    {% if user.is_viceprincipal %}
+                    {% else %}
+                    <div id="hidden_div">{{ form.pickvp|as_crispy_field }}</div>
+                    {% endif %}
+                    {% else %}
+                    <div id="hidden_div">
+                        {{ form.pickvp|as_crispy_field }}
+                        {{ form.pickmanager|as_crispy_field }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="period">{{ form.period| as_crispy_field }}</div>
+                
+            </div>
+            <div class="reason">{{ form.reason|as_crispy_field }}</div>
+            
+        </fieldset>
+        <div class='form-group'>
+            <button name="modify" type="submit" class="btn btn-primary">Modify</button>
+        </div>
+    </form>
+    {% endif %}
+  </div>
+    <hr>
+    {% if obj.groupapplystatus == False and obj.appliedby == None or obj.groupapplystatus == True and obj.appliedby == obj.user %}
+      <form method = 'POST' enctype='multipart/form-data' onsubmit="return confirm('Just want to make sure DID YOU DOUBLE CHECK?');"> 
+        {% csrf_token %}
+        <fieldset class='form-group'>
+          <legend class='border-bottom mb-4'> Cancel Application </legend>
+          {{ u_form|crispy }}
+
+        </fieldset>
+        <div class='form-group'>
+          <button name="cancel" type="submit" class="btn btn-primary" onclick="return confirm('*** WARNING : Check your entry as this is an irreversible action. Do you really want to submit? ***');" >Cancel</button>
+        </div>
+      </form>
+    {% else %}
+      <form> 
+        <fieldset class='form-group'>
+          <legend class='border-bottom mb-4'> Cancel Application </legend>
+          <div style="font-weight: lighter; ">**Please contact Secretary to Cancel**</div>
+        </fieldset>
+        <div class='form-group'>
+          <button type="submit" class="btn btn-primary" disabled="">Cancel</button>
+        </div>
+      </form>
+
+    {% endif %}
+
+      
+      
+    {% if obj.appliedby == None %}
+    <form method='POST' enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class='form-group'>
+            <div style="color: red; font-weight: bold;">{{ form.non_field_errors }}</div>
+            <h3 id='leavetitle'>Modify Leave Request</h3>
+            <small class='text-muted' id='thankyou'></small>
+            <hr>
+            <div class='colforapplyandbalance'>
+                <div class='colapply'>
+                    <!-- <legend class='border-bottom mb-4'> Ka Chi Staff Register </legend> -->
+                    {% if user.is_teacher %}
+                    <div class="starttimefield">{{ form.teachertimeofftype|as_crispy_field }}</div>
+                    {% else %}
+                    <div class="starttimefield">{{ form.nonteachertimeofftype|as_crispy_field }}</div>
+                    {% endif %}
+                    <div class="start">
+                        <div class="starttimefield">{{ form.startdate|as_crispy_field }}</div>
+                        <div class="starttimefield hide" id='input1'>{{ form.starttime|as_crispy_field }}</div>
+                    </div>
+                    <div class="end">
+                        <div class="endtimefield">{{ form.enddate|as_crispy_field }}</div>
+                        <div class="endtimefield hide" id='input2'>{{ form.endtime|as_crispy_field }}</div>
+                    </div>
+                    <div class="check">
+                        <input type="checkbox" id="checkbox1" onclick="changeHideStatus()" />
+                        <label for="checkbox1">Time Option</label>
+                    </div>
+                    {% if user.is_teacher %}
+                    {% if user.is_viceprincipal %}
+                    {% else %}
+                    <div id="hidden_div">{{ form.pickvp|as_crispy_field }}</div>
+                    {% endif %}
+                    {% else %}
+                    <div id="hidden_div">
+                        {{ form.pickvp|as_crispy_field }}
+                        {{ form.pickmanager|as_crispy_field }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="period">{{ form.period| as_crispy_field }}</div>
+                
+            </div>
+            <div class="reason">{{ form.reason|as_crispy_field }}</div>
+            
+        </fieldset>
+        <div class='form-group'>
+            <button name="modify" type="submit" class="btn btn-primary">Modify</button>
+        </div>
+    </form>
+    {% endif %}
+
+      <hr>
+    {% if obj.groupapplystatus == False %}
+      <form method = 'POST' enctype='multipart/form-data' onsubmit="return confirm('Just want to make sure DID YOU DOUBLE CHECK?');"> 
+        {% csrf_token %}
+        <fieldset class='form-group'>
+          <legend class='border-bottom mb-4'> Cancel Application </legend>
+          {{ u_form|crispy }}
+
+        </fieldset>
+        <div class='form-group'>
+          <button name="cancel" type="submit" class="btn btn-primary" onclick="return confirm('*** WARNING : Check your entry as this is an irreversible action. Do you really want to submit? ***');" >Cancel</button>
+        </div>
+      </form>
+    {% else %}
+      <form> 
+        <fieldset class='form-group'>
+          <legend class='border-bottom mb-4'> Cancel Application </legend>
+          <div style="font-weight: lighter; ">**Please contact Secretary to Cancel**</div>
+        </fieldset>
+        <div class='form-group'>
+          <button type="submit" class="btn btn-primary" disabled="">Cancel</button>
+        </div>
+      </form>
+
+    {% endif %}
+    {% elif obj.finalstatus == "Canceled"%}
+
+    {% else %}
+      <form> 
+        <fieldset class='form-group'>
+          <legend class='border-bottom mb-4'> Cancel Application </legend>
+          <div style="font-weight: lighter; ">**Please contact Secretary to Cancel**</div>
+        </fieldset>
+        <div class='form-group'>
+          <button type="submit" class="btn btn-primary" disabled="">Cancel</button>
+        </div>
+      </form>
+    {% endif %}
+
+  <script>
+                $(document).ready(function() {
+                // $("#checkbox1").prop('checked', false);
+                // $("#id_nonteachertimeofftype").prop("selectedIndex","Sick Leave");
+                // $("#id_teachertimeofftype").prop("selectedIndex","Sick Leave");
+                // $("#id_pickvp").prop("selectedIndex","");
+                // $("#id_pickmanager").prop("selectedIndex","");
+                // $("#id_pickmanager").prop("required",true);
+                // $("#id_pickvp").prop("required",true);
+
+            });
+
+            let input1;
+            let input2;
+
+            function changeHideStatus() {
+                if (document.getElementById("checkbox1").checked == true) {
+
+                    document.getElementById("input1").setAttribute("class", "starttimefield");
+                    document.getElementById("input2").setAttribute("class", "endtimefield");
+
+                    document.getElementById("id_starttime").value = "";
+                    document.getElementById("id_endtime").value = "";
+          
+
+                } else {
+                    document.getElementById("input1").setAttribute("class", "hide starttimefield");
+                    document.getElementById("input2").setAttribute("class", "hide endtimefield");
+               
+
+                }
+ 
+            }
+
+            function showDiv(divId, element) {
+                document.getElementById(divId).style.display = (element.value == 'Official Leave (Outside)' || element.value == 'Official Leave (In School)' || element.value == 'Over Time') ? 'block' : 'none';
+
+                if (element.value == 'Over Time') {
+                    document.getElementById("checkbox1").checked = true;
+                    document.getElementById("leavetitle").innerHTML = "Over Time Request"; 
+                    document.getElementById("thankyou").innerHTML = "~ Thank you for your contribution :)";
+                    console.log("test1");
+                    changeHideStatus();
+                } else {
+                    document.getElementById("checkbox1").checked = false;
+                    document.getElementById("leavetitle").innerHTML = "Leave Request";
+                    changeHideStatus();
+                    console.log("test2");
+                }
+                
+
+                if (element.value == 'Official Leave (Outside)' || element.value == 'Official Leave (In School)') {
+                    document.getElementById("id_pickvp").required = true;
+                    console.log(document.getElementById("id_pickvp").required);
+                    
+                } else {
+                    document.getElementById("id_pickvp").value = "";
+                    document.getElementById("id_pickvp").required = false;
+                    changeHideStatus();
+                    console.log("test4");
+                }
+
+                if ((element.value == 'Over Time' || element.value == 'Official Leave (Outside)' || element.value == 'Official Leave (In School)')) {
+                    document.getElementById("id_pickvp").required = true;
+                    document.getElementById("id_pickmanager").required= true;
+                    console.log("test5");
+                    
+                } else {
+                    document.getElementById("id_pickvp").value = "";
+                    document.getElementById("id_pickmanager").value = "";
+                    document.getElementById("id_pickvp").required = false;
+                    document.getElementById("id_pickmanager").required= false;
+                    changeHideStatus();
+                    console.log("test6");
+                }
+            }
+            </script>
+  </div>
+{% endblock %}

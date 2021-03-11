@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap3 %}
+{% block extrahead %}
+{{ form.media }}
+{% endblock %}
+{% block content %}
+<div class="content-section">
+    <form method='POST'>
+        {% csrf_token %}
+        <fieldset class='form-group'>
+            <div style="color: red; font-weight: bold;">{{ form.non_field_errors }}</div>
+            <h3>Official Leave Group Request</h3>
+            <hr />
+            <!-- <legend class='border-bottom mb-4'> Ka Chi Staff Register </legend> -->
+            <div class='colforapplyandbalance'>
+                <div class='colapply'>
+                    <div class="start">
+                        <div class="starttimefield">{{ form.startdate|as_crispy_field }}</div>
+                        <div class="starttimefield hide" id='input1'>{{ form.starttime|as_crispy_field }}</div>
+                    </div>
+                    <div class="end">
+                        <div class="endtimefield">{{ form.enddate|as_crispy_field }}</div>
+                        <div class="endtimefield hide" id='input2'>{{ form.endtime|as_crispy_field }}</div>
+                    </div>
+                    <div class="starttimefield">{{ form.officialtype|as_crispy_field }}</div>
+                    <div class="check">
+                        <input type="checkbox" id="checkbox1" onclick="changeHideStatus()" />
+                        <label for="checkbox1">Time Option</label>
+                    </div><br />
+                </div>
+                <div class="period">{{ form.period| as_crispy_field }}<div style="font-weight: lighter; font-style: italic;"> * Hold control or command to select more</div></div>
+               
+                    
+                
+            </div>
+            
+          
+            {% if user.is_supervisor or user.is_viceprincipal or user.is_teacher or user.is_nonteacher %}
+            
+            <div class="picker">{{ form.users|as_crispy_field }}</div>
+            <div id="displaySelected"></div>
+            <textarea name="display" id="display" placeholder="Staff Selected" style="overflow:hidden" readonly></textarea>
+            
+            {% endif %}
+            
+<div style="font-weight: lighter; font-style: italic;"> * Hold control or command to select more than one Staff</div>
+            <div class="picker">{{ form.reason|as_crispy_field }}</div>
+            <script>
+            let input1;
+            let input2;
+
+            function textAreaAdjust() {
+              element = document.getElementById("display");
+              element.style.height = "1px";
+              element.style.height = (25+element.scrollHeight)+"px";
+            }
+            document.getElementById("id_users").addEventListener("click", textAreaAdjust);
+            function getSelectedOptions(sel, fn) {
+                var opts = [],
+                    opt;
+
+                // loop through options in select list
+                for (var i = 0, len = sel.options.length; i < len; i++) {
+                    opt = sel.options[i];
+
+                    // check if selected
+                    if (opt.selected) {
+                        // add to array of option elements to return from this function
+                        opts.push(opt);
+
+                        // invoke optional callback function if provided
+                        if (fn) {
+                            fn(opt);
+                        }
+                    }
+                }
+
+                // return array containing references to selected option elements
+                return opts;
+            }
+
+            function callback(opt) {
+                var display = document.getElementById('display');
+                display.innerHTML += opt.text + " \n";
+
+            }
+
+            function showSelectedValues(sel) {
+                // get reference to display textarea
+                var display = document.getElementById('display');
+                display.innerHTML = ''; // reset
+
+                // callback fn handles selected options
+                getSelectedOptions(sel, callback);
+
+                // remove ', ' at end of string
+                var str = display.innerHTML.slice(0, -2);
+                display.innerHTML = str;
+            };
+            // function showSelectedValues(sel) {
+            //    document.getElementById("displaySelected").innerHTML += sel.options[sel.selectedIndex].text;
+            // }
+            function changeHideStatus() {
+
+                if (document.getElementById("checkbox1").checked == true) {
+
+                    document.getElementById("input1").setAttribute("class", "starttimefield");
+                    document.getElementById("input2").setAttribute("class", "endtimefield");
+                } else {
+
+
+                    document.getElementById("input1").setAttribute("class", "hide starttimefield");
+                    document.getElementById("input2").setAttribute("class", "hide endtimefield");
+
+                }
+            }
+            </script>
+            <script type="text/javascript">
+            jQuery(document).ready(function() { jQuery('.timepicker').datepicker(); });
+            </script>
+        </fieldset>
+        <div class='form-group'>
+            <button type="submit" class="btn btn-primary">Apply</button>
+        </div>
+    </form>
+    <div class="border-top pt-3">
+        <small class='text-muted'>
+            Already Have An Account? <a class='ml-2' href="{% url 'login' %}">Sign In</a>
+        </small>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,238 @@
+
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+	<!-- <a class="navbar-brand" href="#">Navbar</a> -->
+	<button style = "margin-left:95%" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+    	<span class="navbar-toggler-icon"></span>
+  	</button>
+	<div class="collapse navbar-collapse" id="navbarNav" >
+
+		<ul class="navbar-nav d-flex">
+		{% if user.is_authenticated %}
+		{% if user.is_secretary %}
+		
+		<li class="nav-item dropdown">
+		 <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown" data-hover="dropdown"> Leave Increment </a>
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" href="{% url 'incrementlistview' %}">Sick Leave Increment Record</a></li>
+				<li><a class="dropdown-item" href="{% url 'incrementallview' %}">Monthly Sick Leave Increment</a></li>
+			</ul>
+		</li>
+
+		<li class="nav-item dropdown">
+		 <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown" data-hover="dropdown"> Manage </a>
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" href="{% url 'secretarylistview' %}">Pending/PrePending </a></li>
+			</ul>
+		</li>
+
+		<li class="nav-item dropdown">
+		 <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown" data-hover="dropdown"> View Record </a>
+			<ul class="dropdown-menu">
+				
+				<li><a class="dropdown-item" href="{% url 'userlistview' %}">Individual User Detail</a></li>
+				<li><a class="dropdown-item" href="{% url 'alllistview' %}">Modify/Cancel/Export </a></li>
+				<li><a class="dropdown-item" href="{% url 'documentlistview' %}"> Check Document </a></li>
+				<li><a class="dropdown-item" href="{% url 'calendarlistview' %}"> Check Calendar </a></li>
+			</ul>
+		</li>
+		
+			<li class="nav-item">
+				<a class="nav-link " href="{% url 'applyforapply' %}">Emergency Leave</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link " href="{% url 'applyforapply2' %}">Apply for Staff</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link " href="{% url 'change_password' %}">Change Password</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link " href="{% url 'logout' %}">Logout</a>
+			</li>
+		{% elif user.is_supervisor and not user.is_nonteacher %}
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'managerlistview' %}">Manage Pending Application </a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'teacherapply' %}">Leave Request</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'profile' %}">My Application Record</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'supervisorapply' %}">Group Apply</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'groupapplylistview' %}">My Group Apply Record</a>
+		</li>
+		<li class="nav-item">
+				<a class="nav-link " href="{% url 'change_password' %}">Change Password</a>
+			</li>
+		<li class="nav-item">
+			<a class="nav-link " href="{% url 'logout' %}">Logout</a>
+		</li>
+		{% elif user.is_supervisor and user.is_nonteacher %}
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'managerlistview' %}">Manage Pending Application </a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'nonteacherapply' %}">Leave Request</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'profile' %}">My Application Record</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'supervisorapply' %}">Group Apply</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'groupapplylistview' %}">My Group Apply Record</a>
+		</li>
+		<li class="nav-item">
+				<a class="nav-link " href="{% url 'change_password' %}">Change Password</a>
+			</li>
+		<li class="nav-item">
+			<a class="nav-link " href="{% url 'logout' %}">Logout</a>
+		</li>
+		{% elif user.is_nonteacher %}
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'nonteacherapply' %}">Leave Request</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'profile' %}">My Application Record</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'supervisorapply' %}">Group Apply</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'groupapplylistview' %}">My Group Apply Record</a>
+		</li>
+		<li class="nav-item">
+				<a class="nav-link " href="{% url 'change_password' %}">Change Password</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link " href="{% url 'logout' %}">Logout</a>
+		</li>
+		{% elif user.is_principal and user.is_teacher %}
+	<!--   <li class="nav-item">
+			<a class="nav-link" href="{% url 'plistview' %}">Principal Manage Application </a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'plistviewdecided' %}">Processed Application Record</a>
+		</li> -->
+
+		<li class="nav-item dropdown">
+		 <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown" data-hover="dropdown"> Manage Application </a>
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" href="{% url 'plistview' %}"> Pending Application Record</a></li>
+				<li><a class="dropdown-item" href="{% url 'plistviewdecided' %}">Processed Application Record</a></li>
+			</ul>
+		</li>
+		<li class="nav-item dropdown">
+		 <a class="nav-link  dropdown-toggle" href="#" data-toggle="dropdown" data-hover="dropdown"> View Application Record </a>
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" href="{% url 'prependinglistview' %}">Action Required Application </a></li>
+				<li><a class="dropdown-item" href="{% url 'userlistview' %}">Individual User Detail </a></li>
+				<li><a class="dropdown-item" href="{% url 'alllistview' %}">Modify/Cancel/Export </a></li>
+				
+			</ul>
+		</li>
+		<li class="nav-item">
+				<a class="nav-link " href="{% url 'change_password' %}">Change Password</a>
+			</li>
+		<li class="nav-item">
+			<a class="nav-link " href="{% url 'logout' %}">Logout</a>
+		</li>
+
+			{% elif user.is_viceprincipal and user.is_teacher %}
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'vplistview' %}">Manage Pending Application </a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'teacherapply' %}">Leave Request</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'profile' %}">My Application Record</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'supervisorapply' %}">Group Apply</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'groupapplylistview' %}">My Group Apply Record</a>
+		</li>
+		
+		<li class="nav-item">
+				<a class="nav-link " href="{% url 'change_password' %}">Change Password</a>
+			</li>
+		<li class="nav-item">
+			<a class="nav-link " href="{% url 'logout' %}">Logout</a>
+		</li>
+			
+			{% elif user.is_teacher  %}
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'teacherapply' %}">Leave Request</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'profile' %}">My Application Record</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'supervisorapply' %}">Group Apply</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="{% url 'groupapplylistview' %}">My Group Apply Record</a>
+		</li>
+		<li class="nav-item">
+				<a class="nav-link " href="{% url 'change_password' %}">Change Password</a>
+			</li>
+		<li class="nav-item">
+			<a class="nav-link " href="{% url 'logout' %}">Logout</a>
+		</li>
+		
+		{% endif %}
+		{% else %}
+			<!-- <li class="nav-item">
+				<a class="nav-link" href="{% url 'login' %}">Login <span class="sr-only">(current)</span></a>
+			</li>
+		 
+			<li class="nav-item">
+				<a class="nav-link" href="#">Help</a>
+			</li> -->
+		{% endif %}
+		</ul>
+		<!-- <span class="navbar-text">
+	      Welcome {{user.username}}!
+	    </span> -->
+	   <!--  <ul class="navbar-nav ml-auto">
+	    	<li class="nav-item">
+            	<p class="nav-item ">Welcome {{user.username}}!</p>        	
+            </li>
+        </ul> -->
+	</div>
+</nav>
+<!-- <script>
+	var activeNavItem = $('.nav-link');
+
+	activeNavItem.click(function(){
+	  
+	  $(this).addClass('active');  
+	});
+</script> -->
+<!-- <ul class="nav">
+		{% if user.is_authenticated %}
+	<li class="nav-item">
+		<a class="nav-link active" href="#">Leave Request</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" href="#">Logout</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" href="#">Placeholder</a>
+	</li>
+	{% else %}
+	<li class="nav-item">
+		<a class="nav-link" href="#">Login</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" href="#">Contact anson</a>
+	</li>
+	 {% endif %}
+
+</ul> -->

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{{ object_list }}
+<h4>Pending Applications</h4>
+<table style="width:90%">
+<tr class = 'table'>
+    <th >Status</th>
+    <th>Apply Date/Time</th>
+    <th>Name</th>
+    <th>Leave Type</th>
+    <th>From</th>
+    <th>To</th>
+    <th>Vice Principal</th>
+    <th>Direct Supervisor</th>
+    <th>Secretary</th>
+
+  </tr>
+{% for stuff in objec_list %}
+	{% if stuff.finalstatus == "Pending" and stuff.firststatus != "Denied" and stuff.secondstatus != "Denied" and stuff.firststatus != "Canceled" and stuff.secondstatus != "Canceled"%}
+		{% if stuff.user.is_nonteacher %}
+		<tr class = 'table'>
+			<td><a href = "{% url 'papprove' myid=stuff.id %}"> {{ stuff.finalstatus }}</td></a>
+			<td> {{ stuff.created_at }}</td>
+			<td> {% for each in stuff.users.all %}{{ each }}<br/>{% empty %}{{ stuff.user.username }} {% endfor %} </td>
+			<td> {{ stuff.alltimeofftype }}</td>
+			{% if stuff.starttime == None and stuff.endtime == None %}
+				<td> {{ stuff.startdate}}</td>
+				<td> {{ stuff.enddate}}</td>
+			{% else %}
+				<td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
+				<td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
+			{% endif %}	
+
+			{% if stuff.secondstatus == "Pending" %}
+				<td style="color: orange"> {{ stuff.secondstatus }}</td>
+			{% elif stuff.secondstatus == "Approved" %}
+				<td style="color: green"> {{ stuff.secondstatus }}</td>
+			{% else %}
+				<td style="color: red"> {{ stuff.secondstatus }}</td>
+			{% endif %}
+
+			{% if stuff.firststatus == "Pending" %}
+				<td style="color: orange"> {{ stuff.firststatus }}</td>
+			{% elif stuff.firststatus == "Approved" %}
+				<td style="color: green"> {{ stuff.firststatus }}</td>
+			{% else %}
+				<td style="color: red"> {{ stuff.firststatus }}</td>
+			{% endif %}
+
+			{% if stuff.secretarystatus == "Pending" %}
+				<td style="color: orange; font-weight:bold; "> {{ stuff.secretarystatus }}</td>
+			{% elif stuff.secretarystatus == "Approved" %}
+				<td style="color: green; font-weight:bold;"> {{ stuff.secretarystatus }}</td>
+			{% else %}
+				<td style="color: red;font-weight:bold;"> {{ stuff.secretarystatus }}</td>
+			{% endif %}
+		
+		</tr>
+		{% else %}
+		<tr class = 'table' >
+			<td><a href = "{% url 'papprove' myid=stuff.id %}"> {{ stuff.finalstatus }}</td></a>
+			<td> {{ stuff.created_at }}</td>
+			<td> {% for each in stuff.users.all %}{{ each }}<br/>{% empty %}{{ stuff.user.username }} {% endfor %} </td>
+			<td> {{ stuff.alltimeofftype }}</td>
+			{% if stuff.starttime == None and stuff.endtime == None %}
+				<td> {{ stuff.startdate}}</td>
+				<td> {{ stuff.enddate}}</td>
+			{% else %}
+				<td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
+				<td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
+			{% endif %}	
+
+			{% if stuff.secondstatus == "Pending" %}
+				<td style="color: orange"> {{ stuff.secondstatus }}</td>
+			{% elif stuff.secondstatus == "Approved" %}
+				<td style="color: green"> {{ stuff.secondstatus }}</td>
+			{% else %}
+				<td style="color: red"> {{ stuff.secondstatus }}</td>
+			{% endif %}
+
+			<td> Not Applicable</td>
+
+			{% if stuff.secretarystatus == "Pending" %}
+				<td style="color: orange; font-weight:bold;"> {{ stuff.secretarystatus }}</td>
+			{% elif stuff.secretarystatus == "Approved" %}
+				<td style="color: green; font-weight:bold;"> {{ stuff.secretarystatus }}</td>
+			{% else %}
+				<td style="color: red; font-weight:bold;"> {{ stuff.secretarystatus }}</td>
+			{% endif %}
+		</tr>
+		{% endif%}
+	{% endif %}	
+{% endfor %}
+
+</table>
+		
+{% endblock %}

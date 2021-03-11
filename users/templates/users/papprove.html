@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+<!--  -->
+<div class="content-section">
+    <div class="media">
+        <div class="media-body">
+            <div class='colforapplyandbalance'>
+                <div class='colapply'> 
+                    
+                    <h4>{{ obj.alltimeofftype }}</h4>
+                 
+                    {% if obj.starttime != None and obj.endtime != None %}
+                    <p class="text-secondary">From : {{ obj.startdate }} {{ obj.starttime }}</p>
+                    <p class="text-secondary">To : {{ obj.enddate }} {{ obj.endtime }}</p>
+                    {% else %}
+                    <p class="text-secondary">From : {{ obj.startdate }}</p>
+                    <p class="text-secondary">To : {{ obj.enddate }}</p>
+                    {% endif %}
+                    {% if obj.nonteachertimeofftype == 'Overtime' or  obj.nonteachertimeofftype == 'Overtime Compensatory Leave' %}
+                    <p class="text-secondary">Estimated Hour (hrs): {{ obj.duration }}</p>
+                    {% else %}
+                    <p class="text-secondary">Estimated Day (days): {{ obj.duration }}</p>
+                    {% endif %}
+                    <p class="text-secondary"> Reason : {{ obj.reason }}</p>
+                    {% if obj.period != "[]" %}
+                    <p class="font-weight-bold"> Period : {{ obj.period}}</p>
+                    {% endif %}<br>
+                    {% if obj.user.is_nonteacher %}
+                    <h5 class="account-heading">Supervisor Validation: {{ obj.firststatus }}</h5>
+                    {% endif %}
+                    <!-- <p class="text-secondary">{{ obj.firststatus }}</p> -->
+                    {% if obj.firstcomment != None %}
+                    <p class="text-secondary"> {{ obj.firstcomment }}</p><br>
+                    {% endif %}
+                    <h5 class="account-heading">Vice Principal Validation: {{ obj.secondstatus }}</h5>
+                    <!-- <p class="text-secondary">Vice Principal Approval Status : {{ obj.secondstatus }}</p> -->
+                    {% if obj.secondcomment != None %}
+                    <p class="text-secondary"> {{ obj.secondcomment }}</p><br>
+                    {% endif %}
+                    <h5 class="account-heading">Secretary Validation: {{ obj.secretarystatus }}</h5>
+                </div>
+            </div>
+        </div>
+        <div class='colbalance'>
+            {% if applicant.is_nonteacher %}
+            <h4> Applicant : {{ applicant.user }}</h4>
+            <table style="width:100%">
+                <tr class='table'>
+                    <td> Sick Leave Balance</td>
+                    <td> {{ applicant.sickleave }} day(s)</td>
+                </tr>
+                <tr class='table'>
+                    <td> Sick Leave TAKEN</td>
+                    <td> {{ applicant.sickleavecounter }} day(s)</td>
+                </tr>
+                <tr class='table'>
+                    <td> Annual Leave Balance</td>
+                    <td> {{ applicant.annualleave }} day(s)</td>
+                </tr>
+                <tr class='table'>
+                    <td> Over Time Balance</td>
+                    <td> {{ applicant.compensatedleave }} hour(s)</td>
+                </tr>
+                <tr class='table'>
+                    <td> Non-Teacher Ratio</td>
+                    <td> {{ applicant.ratio }}</td>
+                </tr>
+            </table><br><br>
+            {% else %}
+            <h4> Applicant : {{ applicant.user }}</h4>
+            <table style="width:100%">
+                <tr class='table'>
+                    <td> Sick Leave Balance</td>
+                    <td> {{ applicant.sickleave }} day(s)</td>
+                </tr>
+                <tr class='table'>
+                    <td> Sick Leave TAKEN</td>
+                    <td> {{ applicant.sickleavecounter }} day(s)</td>
+                </tr>
+                <tr class='table'>
+                    <td> Casual Leave Balance</td>
+                    <td> {{ applicant.casualleave }} day(s)</td>
+                </tr>
+            </table><br><br>
+            {% endif %}
+            <hr />
+        </div>
+    </div>
+    <form method='POST' enctype='multipart/form-data'>
+        {% csrf_token %}
+        <fieldset class='form-group'>
+            <legend class='border-bottom mb-4'> Principal Final Validation </legend>
+            <div style="max-width: 30%">
+                <br>
+                {% if obj.user.is_teacher %}
+                {{ u_form.teacherchangetimeofftype|as_crispy_field }}
+                {% else %}
+                {{ u_form.nonteacherchangetimeofftype|as_crispy_field }}
+                {% endif %}
+                {{ u_form.finalstatus|as_crispy_field }}
+                {{ u_form.finalcomment|as_crispy_field }}
+                {{ u_form.finalduration|as_crispy_field }}
+            </div>
+        </fieldset>
+        <div class='form-group'>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

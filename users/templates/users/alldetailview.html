@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap3 %}
+{% block extrahead %}
+{{ form.media }}
+{% endblock %}
+{% block content %}
+<!--  -->
+
+    <div class="content-section">
+      <div style = "font-weight: lighter; font-style:italic;"> View Record > <a href="{% url 'alllistview' %}">Modify/Cancel/Export </a> > {{ obj.user.username }}'s Application </div> <br>
+      <div class="media" style="background-color: #ff000014;">
+        <div class="media-body">
+          <h4> Applicant : {% for each in obj.users.all %}{{ each }}  {% empty %}{{ obj.user.username }} {% endfor %}</h4>
+
+          <p class="text-secondary">Type of Leave : {{ obj.alltimeofftype }}</p>
+          {% if obj.user.is_teacher %}
+            {% if obj.teachertimeofftype == 'Casual Leave' %}
+              <p class="text-secondary">Casual leave : {{ applicant.casualleave }}</p>
+            {% elif obj.teachertimeofftype == 'Sick Leave'%}
+              <p class="text-secondary">Sick leave : {{ applicant.sickleave }}</p>
+            
+            {% endif %}
+              
+          {% else %}
+            {% if obj.nonteachertimeofftype == 'Annual Leave' %}
+              <p class="text-secondary">Annual leave : {{ applicant.annualleave }}</p>
+            {% elif obj.nonteachertimeofftype == 'Sick Leave'%}
+              <p class="text-secondary">Sick leave : {{ applicant.sickleave }}</p>
+            {% elif obj.nonteachertimeofftype == 'Over Time'%}
+              <p class="text-secondary">Compensated Leave : {{ applicant.compensatedleave }}</p>
+            {% endif %}
+          {% endif %}
+          <p class="text-secondary">Start Date : {{ obj.startdate }}</p>
+          <p class="text-secondary">End Date : {{ obj.enddate }}</p>
+          {% if obj.starttime != None and obj.endtime != None%}
+          <p class="text-secondary">Start Time : {{ obj.starttime }}</p>
+          <p class="text-secondary">End Time : {{ obj.endtime }}</p>
+          {% endif %}
+          {% if obj.finalduration == None %}
+            <p class="text-secondary">Duration : {{ obj.duration }}</p>
+          {% else %}
+            <p class="text-secondary">Duration : {{ obj.finalduration }}</p>
+          {% endif %}
+
+          <p class="text-secondary">Applicant Reason : {{ obj.reason }}</p>
+          {% if obj.period != "[]" %}
+                    <p class="font-weight-bold"> Period : {{ obj.period}}</p>
+                    {% endif %}<br>
+          <h4 class="account-heading">Supervisor Validation:</h4>          
+          <p class="text-secondary">Supervisor Approval Status : {{ obj.firststatus }}</p>
+          <p class="text-secondary">Supervisor comment : {{ obj.firstcomment }}</p><br>
+          <h4 class="account-heading">Vice Principal Validation:</h4>          
+          <p class="text-secondary">Vice Principal Approval Status : {{ obj.secondstatus }}</p>
+          <p class="text-secondary">Vice Principal comment : {{ obj.secondcomment }}</p><br>
+          <h4 class="account-heading">Principal Validation:</h4>    
+          <p class="text-secondary">Principal Approval Status : {{ obj.finalstatus }}</p>
+          <p class="text-secondary">Principal comment : {{ obj.finalcomment }}</p><br>
+        </div>
+      </div>
+  
+     {% if obj.groupapplystatus == False %} 
+    <form method='POST' enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class='form-group'>
+            <div style="color: red; font-weight: bold;">{{ form.non_field_errors }}</div>
+            <h3 id='leavetitle'>Modify Leave Request</h3>
+            <small class='text-muted' id='thankyou'></small>
+            <hr>
+            <div class='colforapplyandbalance'>
+                <div class='colapply'>
+
+                    {% if applicant.is_teacher %}
+                    <div class="starttimefield">{{ teacherform.teachertimeofftype|as_crispy_field }}</div>
+                    <div class="start">
+                        <div class="starttimefield">{{ teacherform.startdate|as_crispy_field }}</div>
+                        <div class="starttimefield hide" id='input1'>{{ teacherform.starttime|as_crispy_field }}</div>
+                    </div>
+                    <div class="end">
+                        <div class="endtimefield">{{ teacherform.enddate|as_crispy_field }}</div>
+                        <div class="endtimefield hide" id='input2'>{{ teacherform.endtime|as_crispy_field }}</div>
+                    </div>
+                    {% else %}
+                    <div class="starttimefield">{{ nonteacherform.nonteachertimeofftype|as_crispy_field }}</div>
+                    <div class="start">
+                        <div class="starttimefield">{{ nonteacherform.startdate|as_crispy_field }}</div>
+                        <div class="starttimefield hide" id='input1'>{{ nonteacherform.starttime|as_crispy_field }}</div>
+                    </div>
+                    <div class="end">
+                        <div class="endtimefield">{{ nonteacherform.enddate|as_crispy_field }}</div>
+                        <div class="endtimefield hide" id='input2'>{{ nonteacherform.endtime|as_crispy_field }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="check">
+                        <input type="checkbox" id="checkbox1" onclick="changeHideStatus()" />
+                        <label for="checkbox1">Time Option</label>
+                    </div>
+                    {% if applicant.is_teacher %}
+                    {% if applicant.is_viceprincipal %}
+                    {% else %}
+                    <div id="hidden_div">{{ teacherform.pickvp|as_crispy_field }}</div>
+                    {% endif %}
+                    {% else %}
+                    <div id="hidden_div">
+                        {{ nonteacherform.pickvp|as_crispy_field }}
+                        {{ nonteacherform.pickmanager|as_crispy_field }}
+                    </div>
+                    {% endif %}
+                </div>
+            {% if applicant.is_teacher %}
+            <div class="period">{{ teacherform.period| as_crispy_field }}</div>
+                
+            </div>
+            <div class="reason">{{ teacherform.reason|as_crispy_field }}</div>
+            {% else %}
+            <div class="period">{{ nonteacherform.period| as_crispy_field }}</div>
+                
+            </div>
+            <div class="reason">{{ nonteacherform.reason|as_crispy_field }}</div>
+            {% endif %}
+        </fieldset>
+        <div class='form-group'>
+            <button name="modify" type="submit" class="btn btn-danger"  onclick="return confirm('*** WARNING : DO YOU WANT TO MODIFY? THIS WILL CHANGE PRINCIPAL STATUS TO PENDING ***'">Modify</button>
+        </div>
+    </form>
+    {% else %}
+    <form method='POST'>
+        {% csrf_token %}
+        <fieldset class='form-group'>
+            <div style="color: red; font-weight: bold;">{{ g_form.non_field_errors }}</div>
+            <h3>Modify Group Request</h3>
+            <hr />
+            <!-- <legend class='border-bottom mb-4'> Ka Chi Staff Register </legend> -->
+            <div class='colforapplyandbalance'>
+                <div class='colapply'>
+                    <div class="start">
+                        <div class="starttimefield">{{ g_form.startdate|as_crispy_field }}</div>
+                        <div class="starttimefield hide" id='input1'>{{ g_form.starttime|as_crispy_field }}</div>
+                    </div>
+                    <div class="end">
+                        <div class="endtimefield">{{ g_form.enddate|as_crispy_field }}</div>
+                        <div class="endtimefield hide" id='input2'>{{ g_form.endtime|as_crispy_field }}</div>
+                    </div>
+                    <div class="starttimefield">{{ g_form.officialtype|as_crispy_field }}</div>
+                    <div class="check">
+                        <input type="checkbox" id="checkbox1" onclick="changeHideStatus()" />
+                        <label for="checkbox1">Time Option</label>
+                    </div><br />
+                </div>
+                <div class="period">{{ g_form.period| as_crispy_field }}</div>
+            </div>
+                        
+            <div class="picker">{{ g_form.users|as_crispy_field }}</div>
+            <div id="displaySelected"></div>
+            <textarea name="display" id="display" placeholder="Staff Selected" style="overflow:hidden" readonly></textarea>
+                        
+            <div style="font-weight: lighter; font-style: italic;"> * Hold control or command to select more than one Staff</div>
+            <div class="picker">{{ g_form.reason|as_crispy_field }}</div>
+            
+        </fieldset>
+        <div class='form-group'>
+            <button name="modifygroup" type="submit" class="btn btn-danger" onclick="return confirm('*** WARNING : DO YOU WANT TO MODIFY? THIS WILL CHANGE PRINCIPAL STATUS TO PENDING ***'">Modify</button>
+        </div>
+    </form>
+
+    {% endif %}
+      <hr>
+      <form method = 'POST' enctype='multipart/form-data' onsubmit="return confirm('Just want to make sure DID YOU DOUBLE CHECK?');"> 
+        {% csrf_token %}
+        <fieldset class='form-group'>
+          <legend class='border-bottom mb-4'> Cancel Application </legend>
+          {{ u_form|crispy }}
+
+        </fieldset>
+        <div class='form-group'>
+          <button name="cancel" type="submit" class="btn btn-danger" onclick="return confirm('*** WARNING : DO YOU REALLY WANT TO DELETE THE APPLICATION? ***');" >DELETE</button>
+        </div>
+      </form>
+  
+  
+  <script>
+                $(document).ready(function() {
+                // $("#checkbox1").prop('checked', false);
+                // $("#id_nonteachertimeofftype").prop("selectedIndex","Sick Leave");
+                // $("#id_teachertimeofftype").prop("selectedIndex","Sick Leave");
+                // $("#id_pickvp").prop("selectedIndex","");
+                // $("#id_pickmanager").prop("selectedIndex","");
+                $("#id_pickmanager").prop("required",false);
+                $("#id_pickvp").prop("required",false);
+            });
+
+            let input1;
+            let input2;
+
+            function changeHideStatus() {
+                if (document.getElementById("checkbox1").checked == true) {
+
+                    document.getElementById("input1").setAttribute("class", "starttimefield");
+                    document.getElementById("input2").setAttribute("class", "endtimefield");
+
+                    document.getElementById("id_starttime").value = "";
+                    document.getElementById("id_endtime").value = "";
+          
+
+                } else {
+                    document.getElementById("input1").setAttribute("class", "hide starttimefield");
+                    document.getElementById("input2").setAttribute("class", "hide endtimefield");
+               
+
+                }
+ 
+            }
+
+            function showDiv(divId, element) {
+                document.getElementById(divId).style.display = (element.value == 'Official Leave (Outside)' || element.value == 'Official Leave (In School)' || element.value == 'Over Time') ? 'block' : 'none';
+
+                if (element.value == 'Over Time') {
+                    document.getElementById("checkbox1").checked = true;
+                    document.getElementById("leavetitle").innerHTML = "Over Time Request"; 
+                    document.getElementById("thankyou").innerHTML = "~ Thank you for your contribution :)";
+                    console.log("test1");
+                    changeHideStatus();
+                } else {
+                    document.getElementById("checkbox1").checked = false;
+                    document.getElementById("leavetitle").innerHTML = "Leave Request";
+                    changeHideStatus();
+                    console.log("test2");
+                }
+                
+
+                if (element.value == 'Official Leave (Outside)' || element.value == 'Official Leave (In School)') {
+                    document.getElementById("id_pickvp").required = true;
+                    console.log(document.getElementById("id_pickvp").required);
+                    
+                } else {
+                    document.getElementById("id_pickvp").value = "";
+                    document.getElementById("id_pickvp").required = false;
+                    changeHideStatus();
+                    console.log("test4");
+                }
+
+                if ((element.value == 'Over Time' || element.value == 'Official Leave (Outside)' || element.value == 'Official Leave (In School)')) {
+                    document.getElementById("id_pickvp").required = true;
+                    document.getElementById("id_pickmanager").required= true;
+                    console.log("test5");
+                    
+                } else {
+                    document.getElementById("id_pickvp").value = "";
+                    document.getElementById("id_pickmanager").value = "";
+                    document.getElementById("id_pickvp").required = false;
+                    document.getElementById("id_pickmanager").required= false;
+                    changeHideStatus();
+                    console.log("test6");
+                }
+            }
+            </script>
+ </div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load bootstrap3 %}
+{% block extrahead %}
+{{ form.media }}
+{% endblock %}
+{% block content %}
+<div class="content-section">
+    <form method='POST'>
+        {% csrf_token %}
+        <fieldset class='form-group'>
+            <div style="color: red; font-weight: bold;">{{ form.non_field_errors }}</div>
+            <h3>Emergency Leave</h3>
+            <hr />
+            <div class="start">
+                <div class="starttimefield">{{ form.startdate|as_crispy_field }}</div>
+                <div class="starttimefield hide" id='input1'>{{ form.starttime|as_crispy_field }}</div>
+            </div>
+            <div class="end">
+                <div class="endtimefield">{{ form.enddate|as_crispy_field }}</div>
+                <div class="endtimefield hide" id='input2'>{{ form.endtime|as_crispy_field }}</div>
+            </div>
+            <div>
+                <div class="endtimefield">{{ form.emergencytype|as_crispy_field }}</div>
+            </div>
+            <div class="check">
+                <input type="checkbox" id="checkbox1" onclick="changeHideStatus()" />
+                <label for="checkbox1">Time Option</label>
+            </div>
+            {% if user.is_supervisor or user.is_viceprincipal or user.is_secretary %}
+            <div class="picker">{{ pickform.pickuser|as_crispy_field }}</div>
+            {% endif %}
+            <div class="picker">{{ form.reason|as_crispy_field }}</div>
+            <script>
+            let input1;
+            let input2;
+
+            function changeHideStatus() {
+
+                if (document.getElementById("checkbox1").checked == true) {
+
+                    document.getElementById("input1").setAttribute("class", "starttimefield");
+                    document.getElementById("input2").setAttribute("class", "endtimefield");
+                } else {
+
+
+                    document.getElementById("input1").setAttribute("class", "hide starttimefield");
+                    document.getElementById("input2").setAttribute("class", "hide endtimefield");
+
+                }
+            }
+            </script>
+            <script type="text/javascript">
+            jQuery(document).ready(function() { jQuery('.timepicker').datepicker(); });
+            </script>
+        </fieldset>
+        <div class='form-group'>
+            <button type="submit" class="btn btn-primary">Apply</button>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{{ object_list }}
+<!-- <table style="width:70%">
+<tr class = 'table'>
+    <th>Status</th>
+    <th>Username</th>
+    <th>Leave Detail</th>
+</tr>
+{% for stuff in objec_list %}
+	{% if stuff.firststatus == "Pending" %}
+		<tr class = 'table'>
+
+			<td> {{ stuff.firststatus }}</td>
+			<td> {{ stuff.user.username }} </td>
+			<td><a href = '{{ stuff.get_absolute_url }}'> Check detail </a></td>
+			
+		</tr>
+	{% endif%}	
+{% endfor %}
+</table> -->
+
+<h4>Pending Applications</h4>
+<table style="width:90%">
+<tr class = 'table'>
+    <th>Action</th>
+    <th>Apply Date/Time</th>
+    <th>Name</th>
+    <th>Leave Type</th>
+    <th>From</th>
+    <th>To</th>
+
+
+  </tr>
+{% for stuff in objec_list %}
+	
+	{% if stuff.pickmanager == user_manager   %}
+		{% if stuff.finalstatus == "Pending" and stuff.firststatus == "Pending" and stuff.secondstatus == "Pending" %}
+			<tr class = 'table'>
+				<td><a href = '{{ stuff.get_absolute_url }}'> {{ stuff.firststatus }} </a></td>
+				<td> {{ stuff.created_at }}</td>
+				<td> {{ stuff.user.username }} </td>
+				<td> {{ stuff.alltimeofftype }}</td>
+				{% if stuff.starttime == None and stuff.endtime == None %}
+					<td> {{ stuff.startdate}}</td>
+					<td> {{ stuff.enddate}}</td>
+				{% else %}
+					<td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
+					<td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
+				{% endif %}	
+			
+			</tr>
+		{% endif %}	
+	{% endif %}	
+{% endfor %}
+
+
+</table>
+{% endblock %}

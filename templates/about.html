@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>About</h1>
+<p>This is about kachi</p>
+<p>
+	{{ my_text|capfirst|upper}} {{my_num}} {{my_list}}
+</p>
+
+{% for my_sub_item in my_list %}
+	{% if my_sub_item == 12 %}
+		<li>{{ forloop.counter }} is {{ my_sub_item|add:12 }}</li>
+	{% endif %}
+
+{% endfor %}
+
+{% endblock %}

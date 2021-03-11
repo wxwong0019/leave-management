@@ -1,0 +1,469 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <style type="text/css">
+    * {
+        font-family: 'Noto Sans TC', sans-serif;
+    }
+   /* p{
+        margin-bottom: 80px;
+    }
+    ul{
+        margin-bottom: 80px;
+    }*/
+    .navbar-nav>li {
+        padding-left: 20px;
+        padding-right: 20px;
+        
+    }
+    #id_period {
+        height: 200px;
+    }
+    #div_id_period{
+        width: 50%;
+        height: 100%;
+    }
+
+    
+    @media not all and (min-resolution:.001dpcm)
+    { @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+        #div_id_pickuser{
+            display: flex;
+            flex-direction: column;
+        }
+
+        #div_id_period{
+            display: flex;
+            flex-direction: column;
+        }
+        #div_id_attachmentrequired{
+            display: flex;
+            flex-direction: column;
+        }
+        .check{
+            display: flex;
+            flex-direction: row;
+            
+        }
+        #id_attachmentrequired{
+            display: flex;
+            flex-direction: column;
+        }
+        #div_id_users{
+            display: flex;
+            flex-direction: column;
+        }
+       
+    }}
+    #div_id_users .requiredField{
+            width: 300px;
+        }
+
+    .mybar {
+      position: fixed;
+      width: 100%;
+    }
+
+    .fixedbar {
+        position: fixed;
+        width: 100%;
+        top:0;
+        overflow: hidden;
+        z-index: 3;
+    }
+    .main{
+        margin-top: 150px;
+    }
+
+    .media {
+        min-height: 5em;
+        padding: 1em 4em;
+        font: 1em/150% sans-serif;
+        position: relative;
+        background-color: lightgoldenrodyellow;
+    }
+
+    .username {
+        position: absolute;
+        bottom: 8px;
+        right: 16px;
+        font-size: 13px;
+    }
+
+    .success {
+        min-height: 5em;
+        padding: 1em 4em;
+        font: 1em/150% sans-serif;
+        position: relative;
+        background-color: lightgoldenrodyellow;
+    }
+
+    .logo {
+        max-width: 60px;
+        margin-right: 20px;
+    }
+
+    .h1 {
+        text-align: center;
+        font-family: Geneva, Arial, Helvetica, Verdana, sans-serif;
+        color: blue;
+    }
+
+    /*table, th, td {
+    border: 1.5px solid black;
+  }*/
+    .body {
+        position:relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /*  .table{
+    padding: 10px;
+  }*/
+
+    .Kachi {
+        text-align: center;
+        color: white;
+        background-color: #99b3b9;
+        opacity: 1;
+        padding: 10px;
+        font-family: Geneva, Arial, Helvetica, Verdana, sans-serif;
+        font-size: 35px;
+        margin: 0%;
+        width: auto;
+        position: relative;
+
+    }
+
+    #hidden_div {
+        display: none;
+    }
+
+    #hidden_div2 {
+        display: none;
+    }
+
+    p {
+        line-height: 12px;
+    }
+
+    label,
+    input {
+        width: 200px;
+        float: left;
+    }
+
+    .colforapplyandbalance {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+    }
+
+    .colapply {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .colbalance {
+        display: flex;
+        flex-direction: column;
+        max-width:
+            /*    justify-content: space-around;
+*/
+    }
+    #changepw{
+        max-width: 200px;
+        display: inline-flex;
+        flex-direction: column;
+    }
+    #checkbox1,
+    #checkboxPeriod,
+    #checkboxWholeDay {
+        width: 30px;
+    }
+    .period{
+        max-height: 210px;
+    }
+
+    .startdate {
+        text-align: center;
+        font-size: 1em;
+    }
+
+    .starttime {
+        font-size: 1em;
+    }
+
+    .content-section-forapply {
+        /*margin : 2px 50px 75px 100px;*/
+        margin: auto;
+        max-width: 100%;
+        z-index: 0;
+    }
+
+    .content-section {
+        margin: auto;
+        max-width: 1110px;
+
+    }
+
+    .starttimefield {
+        width: 200px;
+        margin-right: 10rem;
+    }
+
+    .endtimefield {
+        width: 200px;
+        margin-right: 10rem;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        max-width: 900px;
+    }
+
+    .start {
+        /*    float : left;
+*/
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+    }
+
+    .end {
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+    }
+
+    .endforgroup .check {
+        margin-top: 0px;
+        float: left;
+        padding-left: 30px;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    .reason {
+        margin-top: 20px;
+        float: bottom;
+    }
+
+    .picker {
+        margin-top: 45px;
+        max-width: 100%;
+
+    }
+
+    .form-group {
+        margin-top: 20px;
+    }
+
+    hr {
+        width: 100%;
+        display: block;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        margin-left: auto;
+        margin-right: auto;
+        border-style: inset;
+        border-width: 1px;
+    }
+
+    .profiledetail {
+        display: flex;
+        flex-direction: column;
+        max-width: auto;
+        min-height: 5em;
+        padding: 1em 4em;
+        font: 1em/150% sans-serif;
+        position: relative;
+        background-color: rgb(252, 252, 232);
+    }
+/*--------------------------------------------------*/
+    $text-background: #99b3b9;
+$text-colour:     rgba(255, 255, 255, 1);
+
+[role="progressbar"] {
+  position: relative;
+  
+  p {
+    display: block;
+    margin: 0;
+    height: 60px;
+    font-family: Arial,Sacramento, cursive;
+    font-size: 1em;
+    text-align: center;
+    }
+  
+  &::before,
+  &::after {
+    display: block;
+    height: 120px;
+    font-family: Montserrat, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    font-size: 6em;
+    // text-transform: uppercase;
+    content: attr(data-text);
+    }
+  
+  &::before {
+    color: $text-colour;
+    }
+  
+  &::after {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    color: $text-background;
+    overflow: hidden;
+    }
+}
+
+// Busy state
+[role="progressbar"][aria-busy="true"]::after {
+  animation: load ease-out 10s infinite forwards;
+}
+
+@keyframes load {
+  0%, 10%, 100% {
+    height: 0;
+    }
+  
+  90% {
+    height: 120px;
+    }
+}
+
+// Unimportant bits
+@import url(https://fonts.googleapis.com/css?family=Sacramento:400|Montserrat:700);
+
+
+
+/*--------------------------------------*/
+.loader-wrapper {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #242f3f;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+.loader {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  border: 4px solid #Fff;
+  animation: loader 2s infinite ease;
+}
+.loader-inner {
+  vertical-align: top;
+  display: inline-block;
+  width: 100%;
+  background-color: #fff;
+  animation: loader-inner 2s infinite ease-in;
+}
+@keyframes loader {
+  0% { transform: rotate(0deg);}
+  25% { transform: rotate(180deg);}
+  50% { transform: rotate(180deg);}
+  75% { transform: rotate(360deg);}
+  100% { transform: rotate(360deg);}
+}
+@keyframes loader-inner {
+  0% { height: 0%;}
+  25% { height: 0%;}
+  50% { height: 100%;}
+  75% { height: 100%;}
+  100% { height: 0%;}
+}
+
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" >
+    <!-- Bootstrap Dropdown Hover CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="css/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="css/bootstrap-dropdownhover.min.css" rel="stylesheet">
+    
+    {% load bootstrap3 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery=full %}
+    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="scripts/moment-2.4.0.js"></script>
+    <script type="text/javascript" src="scripts/bootstrap-datetimepicker.js"></script>
+    
+    {% block extrahead %}
+    {% endblock %}
+    <title>Kachi-iLeave</title>
+    <meta charset="UTF-8" />
+</head>
+
+<body>
+    <header>
+        {% load static %}
+        <div class="fixedbar">
+            <div class="Kachi">
+                <div style="display: inline-flex;">
+                    <a href="http://www.kachi.edu.hk/en"> <img class='logo' src="{% static 'image/kachi.png'%}" alt="PAOC Ka Chi Secondary School"></a>
+                    <h2>iLeave System  </h2><h2 style="font-size: 0.25em ;">Beta@9.3.21</h2>
+                </div>
+                <div class="username">{{user.username}}</div>
+            </div>
+            <div class='mybar'>{% include 'navbar.html' %}</div>
+        </div>
+    </header>
+    <div class="main">
+        <table id="menu">
+        </table>
+        <div class='container'>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            <div class='body'>
+                {% block content %}
+                replace me
+                {% endblock %}
+            </div>
+            <!-- <footer>&copy; 2021 copyrighted</footer>
+ -->
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Bootstrap Dropdown Hover JS -->
+    <script src="js/bootstrap-dropdownhover.min.js"></script>
+</body>
+
+</html>

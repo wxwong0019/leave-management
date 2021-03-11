@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{{ object_list }}
+<div style = "font-weight: lighter; font-style:italic;"> Leave Increment > Sick Leave Increment Record</div></br><br>
+<h4>Sick Leave Increment Record</h4>
+<table style="width:70%">
+<tr class = 'table'>
+    <th>Date Created</th>
+    <th>Username</th>
+    <th>Incremented</th>
+  </tr>
+{% for stuff in objec_list %}
+		<tr class = 'table'>
+			<td> {{ stuff.created_at }}</td>
+			<td> {{ stuff.user}} </td>
+			<td>{{ stuff.added}}</td>
+		</tr>
+{% endfor %}
+
+</table>
+
+{% endblock %}

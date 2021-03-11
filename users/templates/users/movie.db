@@ -1,0 +1,6 @@
+db.movie.find( {
+    $and : [
+        { $or : [ { price : { $eq : 4.79 } }, { price : { $eq : 3.09 } } ] },
+        { $or : [ { sale : true }, { qty : { $lt : 20 } } ] }
+    ]
+} )

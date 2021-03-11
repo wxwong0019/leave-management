@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+<!--  -->
+
+    <div class="content-section">
+      <div style = "font-weight: lighter; font-style:italic;"> View Application > <a href="{% url 'calendarlistview' %}">Check Calendar </a> > detail</div>
+<br> 
+      <div class="media">
+        <div class="media-body">
+          <h4 class="account-heading">Applicant : {{ obj.user.username }}</h4>
+
+          <p class="text-secondary">Type of Leave : {{ obj.alltimeofftype }}</p>
+          {% if obj.user.is_teacher %}
+            {% if obj.teachertimeofftype == 'Casual Leave' %}
+              <p class="text-secondary">Casual leave : {{ applicant.casualleave }}</p>
+            {% elif obj.teachertimeofftype == 'Sick Leave'%}
+              <p class="text-secondary">Sick leave : {{ applicant.sickleave }}</p>
+            
+            {% endif %}
+              
+          {% else %}
+            {% if obj.nonteachertimeofftype == 'Annual Leave' %}
+              <p class="text-secondary">Annual leave : {{ applicant.annualleave }}</p>
+            {% elif obj.nonteachertimeofftype == 'Sick Leave'%}
+              <p class="text-secondary">Sick leave : {{ applicant.sickleave }}</p>
+            {% elif obj.nonteachertimeofftype == 'Over Time'%}
+              <p class="text-secondary">Compensated Leave : {{ applicant.compensatedleave }}</p>
+            {% endif %}
+          {% endif %}
+          <p class="text-secondary">Start Date : {{ obj.startdate }}</p>
+          <p class="text-secondary">End Date : {{ obj.enddate }}</p>
+          {% if obj.starttime != None and obj.endtime != None%}
+          <p class="text-secondary">Start Time : {{ obj.starttime }}</p>
+          <p class="text-secondary">End Time : {{ obj.endtime }}</p>
+          {% endif %}
+          <p class="text-secondary">Duration : {{ obj.duration }}</p>
+          <p class="text-secondary">Applicant Reason : {{ obj.reason }}</p>
+          {% if obj.period != "[]" %}
+                    <p class="font-weight-bold"> Period : {{ obj.period}}</p>
+                    {% endif %}<br>
+          <h4 class="account-heading">Supervisor Validation:</h4>          
+          <p class="text-secondary">Supervisor Approval Status : {{ obj.firststatus }}</p>
+          <p class="text-secondary">Supervisor comment : {{ obj.firstcomment }}</p><br>
+          <h4 class="account-heading">Vice Principal Validation:</h4>          
+          <p class="text-secondary">Vice Principal Approval Status : {{ obj.secondstatus }}</p>
+          <p class="text-secondary">Vice Principal comment : {{ obj.secondcomment }}</p><br>
+          <h4 class="account-heading">Principal Validation:</h4>    
+          <p class="text-secondary">Principal Approval Status : {{ obj.finalstatus }}</p>
+          <p class="text-secondary">Principal comment : {{ obj.finalcomment }}</p><br>
+        </div>
+      </div>
+  
+
+  <form method = 'POST' enctype='multipart/form-data' onsubmit="return confirm('Just want to make sure DID YOU DOUBLE CHECK?');"> 
+    {% csrf_token %}
+    <fieldset class='form-group'>
+      <legend class='border-bottom mb-4'> Document Check </legend>
+      <div class="check">
+      {{ u_form.calendarcheck|as_crispy_field }}<br>
+      {{ u_form.secretarycomment|as_crispy_field }}
+      </div><br>
+
+    </fieldset>
+    <div class='form-group'>
+      <button type="submit" class="btn btn-primary" onclick="return confirm('*** WARNING : Check your entry as this is an irreversible action. Do you really want to submit? ***');" >Save</button>
+    </div>
+  </form>
+
+ </div>
+{% endblock %}

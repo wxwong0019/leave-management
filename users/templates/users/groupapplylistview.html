@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+{{ object_list }}
+<!-- <table style="width:70%">
+<tr class = 'table'>
+    <th>Status</th>
+    <th>Username</th>
+    <th>Leave Detail</th>
+</tr>
+{% for stuff in objec_list %}
+	{% if stuff.firststatus == "Pending" %}
+		<tr class = 'table'>
+
+			<td> {{ stuff.firststatus }}</td>
+			<td> {{ stuff.user.username }} </td>
+			<td><a href = '{{ stuff.get_absolute_url }}'> Check detail </a></td>
+			
+		</tr>
+	{% endif%}	
+{% endfor %}
+</table> -->
+<h4>Your Group Apply Record</h4>
+<table style="width:90%">
+    <tr class='table'>
+        
+        <th>Apply Date/Time</th>
+        <th>Name</th>
+        <th>Leave Type</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Modify</th>
+        
+    </tr>
+    {% for stuff in objec_list %}
+    {% if stuff.finalstatus == "Pending" and stuff.secondstatus == "Pending" and stuff.firststatus == "Pending" or stuff.finalstatus == "Pending" and stuff.secondstatus == "Approved" and stuff.appliedby.is_viceprincipal or stuff.finalstatus == "Pending" and stuff.secondstatus == "Pending" and stuff.firststatus == "Approved" and stuff.appliedby.is_supervisor %}
+
+    
+    <tr class='table'>
+        <td> {{ stuff.created_at }}</td>
+        <td> {% for each in stuff.users.all %}{{ each }}<br/>{% endfor %} </td>
+        <td> {{ stuff.alltimeofftype }}</td>
+        {% if stuff.starttime == None and stuff.endtime == None %}
+        <td> {{ stuff.startdate}}</td>
+        <td> {{ stuff.enddate}}</td>
+        {% else %}
+        <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
+        <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
+        {% endif %}
+        <td><a href = "{% url 'groupapplychangeview' myid=stuff.id %}">Modify</a></td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+</table>
+{% endblock %}
