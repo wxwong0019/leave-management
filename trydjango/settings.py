@@ -176,12 +176,21 @@ REST_FRAMEWORK = {
     ]
 }
 
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# # EMAIL_PORT = '587'
+# EMAIL_PORT = '587'
+# EMAIL_HOST_USER = 'apikey'
+# EMAIL_HOST_PASSWORD = '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'
+# DEFAULT_FROM_EMAIL = 'iLeave.AutoResponse@gmail.com'
+# EMAIL_USE_TLS = True
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_PORT = '587'
 EMAIL_PORT = '587'
-EMAIL_HOST_USER = 'wxwong0019test@gmail.com'
-EMAIL_HOST_PASSWORD = 'g77a97g77a971'
+EMAIL_HOST_USER = 'iLeave.AutoResponse@gmail.com'
+EMAIL_HOST_PASSWORD = "u4PU88Fgt28dmdSafs9h%&TB&ftb9&WTF&(WT(&BFTist(&AWBG(P&B&Abs79BTFW&(T&FTBAS&(stbfP(&WT(&BT"
 EMAIL_USE_TLS = True
 
 # ACCOUNT_EMAIL_VERIFICATION = 'none'
