@@ -46,8 +46,7 @@ INSTALLED_APPS = [
     'page',
     'users',
     'crispy_forms',
-    'customstaff',
-    'bootstrap_daterangepicker'
+    'customstaff'
 ]
 
 MIDDLEWARE = [
