@@ -17,7 +17,7 @@
   <h4> My Application Record</h4>
   <h5> Name: {{ userid.user }}</h5>
   <h5> Sick Leave Taken (day(s)): {{ userid.sickleavecounter }}</h5>
-  <h5> Over Time Balance (hour(s)): {{ userid.casualleave }}</h5><br><br>
+  <h5> Overtime Balance (hour(s)): {{ userid.casualleave }}</h5><br><br>
   {% endif %}
 </div> --> 
 <div class='profiledetail'>
@@ -34,7 +34,7 @@
             <td> {{ userid.annualleave }} day(s)</td>
         </tr>
         <tr class='table'>
-            <td> Over Time Balance</td>
+            <td> Overtime Balance</td>
             <td> {{ userid.compensatedleave }} hour(s)</td>
         </tr>
         <tr class='table'>
@@ -87,7 +87,7 @@
             <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
             <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
             {% endif %}
-            {% if stuff.alltimeofftype == "Over Time" %}
+            {% if stuff.alltimeofftype == "Overtime" %}
             <td> {{ stuff.duration }} hour(s)</td>
             {% else %}
             <td> {{ stuff.duration }} day(s)</td>
@@ -130,18 +130,40 @@
                       <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
                       <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
                       {% endif %}
-                      {% if stuff.alltimeofftype == "Over Time" %}
+                      {% if stuff.alltimeofftype == "Overtime" %}
                       <td> {{ stuff.duration }} hour(s)</td>
                       {% else %}
                       <td> {{ stuff.duration }} day(s)</td>
                       {% endif %}
+
                       {% if user.is_nonteacher %}
-                      <td> {{ stuff.firststatus }}</td>
+                        {% if stuff.firststatus == "Pending" %}
+                          <td style="color: orange"> {{ stuff.firststatus }}</td>
+                        {% elif stuff.firststatus == "Approved" %}
+                          <td style="color: green"> {{ stuff.firststatus }}</td>
+                        {% else %}
+                          <td style="color: red"> {{ stuff.firststatus }}</td>
+                        {% endif %}
+
                       {% endif %}
+
                       {% if not user.is_viceprincipal %}
-                      <td> {{ stuff.secondstatus }}</td>
+                        {% if stuff.secondstatus == "Pending" %}
+                          <td style="color: orange"> {{ stuff.secondstatus }}</td>
+                        {% elif stuff.secondstatus == "Approved" %}
+                          <td style="color: green"> {{ stuff.secondstatus }}</td>
+                        {% else %}
+                          <td style="color: red"> {{ stuff.secondstatus }}</td>
+                        {% endif %}
                       {% endif %}
-                      <td> {{ stuff.finalstatus }}</td>
+
+                      {% if stuff.finalstatus == "Pending" %}
+                        <td style="color: orange"> {{ stuff.finalstatus }}</td>
+                      {% elif stuff.finalstatus == "Approved" %}
+                        <td style="color: green"> {{ stuff.finalstatus }}</td>
+                      {% else %}
+                        <td style="color: red"> {{ stuff.finalstatus }}</td>
+                      {% endif %}
                       <td><a href="{% url 'profiledetail' myid=stuff.id %}"> View</a></td>
                   </tr>
               {% else %}
@@ -155,18 +177,39 @@
                   <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
                   <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
                   {% endif %}
-                  {% if stuff.alltimeofftype == "Over Time" %}
+                  {% if stuff.alltimeofftype == "Overtime" %}
                   <td> {{ stuff.duration }} hour(s)</td>
                   {% else %}
                   <td> {{ stuff.duration }} day(s)</td>
                   {% endif %}
                   {% if user.is_nonteacher %}
-                  <td> {{ stuff.firststatus }}</td>
-                  {% endif %}
-                  {% if not user.is_viceprincipal %}
-                  <td> {{ stuff.secondstatus }}</td>
-                  {% endif %}
-                  <td> {{ stuff.finalstatus }}</td>
+                        {% if stuff.firststatus == "Pending" %}
+                          <td style="color: orange"> {{ stuff.firststatus }}</td>
+                        {% elif stuff.firststatus == "Approved" %}
+                          <td style="color: green"> {{ stuff.firststatus }}</td>
+                        {% else %}
+                          <td style="color: red"> {{ stuff.firststatus }}</td>
+                        {% endif %}
+
+                      {% endif %}
+
+                      {% if not user.is_viceprincipal %}
+                        {% if stuff.secondstatus == "Pending" %}
+                          <td style="color: orange"> {{ stuff.secondstatus }}</td>
+                        {% elif stuff.secondstatus == "Approved" %}
+                          <td style="color: green"> {{ stuff.secondstatus }}</td>
+                        {% else %}
+                          <td style="color: red"> {{ stuff.secondstatus }}</td>
+                        {% endif %}
+                      {% endif %}
+
+                      {% if stuff.finalstatus == "Pending" %}
+                        <td style="color: orange"> {{ stuff.finalstatus }}</td>
+                      {% elif stuff.finalstatus == "Approved" %}
+                        <td style="color: green"> {{ stuff.finalstatus }}</td>
+                      {% else %}
+                        <td style="color: red"> {{ stuff.finalstatus }}</td>
+                      {% endif %}
                   <td><a href="{% url 'profiledetail' myid=stuff.id %}"> View</a></td>
               </tr>
               {% endif %}
@@ -181,7 +224,7 @@
             <th>Leave Type</th>
             <th>From</th>
             <th>To</th>
-            <th>Duration</th>
+            <th>Duration Approved</th>
             {% if user.is_nonteacher %}
             <th>Direct Supervisor</th>
             {% endif %}
@@ -214,12 +257,33 @@
             <td> {{ stuff.finalduration }} day(s)</td>
             {% endif %}
             {% if user.is_nonteacher %}
-            <td> {{ stuff.firststatus }}</td>
+              {% if stuff.firststatus == "Pending" %}
+                <td style="color: orange"> {{ stuff.firststatus }}</td>
+              {% elif stuff.firststatus == "Approved" %}
+                <td style="color: green"> {{ stuff.firststatus }}</td>
+              {% else %}
+                <td style="color: red"> {{ stuff.firststatus }}</td>
+              {% endif %}
+
             {% endif %}
+
             {% if not user.is_viceprincipal %}
-            <td> {{ stuff.secondstatus }}</td>
+              {% if stuff.secondstatus == "Pending" %}
+                <td style="color: orange"> {{ stuff.secondstatus }}</td>
+              {% elif stuff.secondstatus == "Approved" %}
+                <td style="color: green"> {{ stuff.secondstatus }}</td>
+              {% else %}
+                <td style="color: red"> {{ stuff.secondstatus }}</td>
+              {% endif %}
             {% endif %}
-            <td> {{ stuff.finalstatus }}</td>
+
+            {% if stuff.finalstatus == "Pending" %}
+              <td style="color: orange"> {{ stuff.finalstatus }}</td>
+            {% elif stuff.finalstatus == "Approved" %}
+              <td style="color: green"> {{ stuff.finalstatus }}</td>
+            {% else %}
+              <td style="color: red"> {{ stuff.finalstatus }}</td>
+            {% endif %}
             <td><a href="{% url 'profiledetail' myid=stuff.id %}"> Detail </a></td>
         </tr>
         {% else %}
@@ -237,18 +301,39 @@
             <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
             <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
             {% endif %}
-            {% if stuff.nonteachertimeofftype == "Over Time" %}
+            {% if stuff.nonteachertimeofftype == "Overtime" or stuff.nonteachertimeofftype == "Overtime Compensatory Leave" or stuff.nonteacherchangetimeofftype == "Overtime Compensatory Leave"  %}
             <td> {{ stuff.finalduration }} hour(s)</td>
             {% else %}
             <td> {{ stuff.finalduration }} day(s)</td>
             {% endif %}
             {% if user.is_nonteacher %}
-            <td> {{ stuff.firststatus }}</td>
+              {% if stuff.firststatus == "Pending" %}
+                <td style="color: orange"> {{ stuff.firststatus }}</td>
+              {% elif stuff.firststatus == "Approved" %}
+                <td style="color: green"> {{ stuff.firststatus }}</td>
+              {% else %}
+                <td style="color: red"> {{ stuff.firststatus }}</td>
+              {% endif %}
+
             {% endif %}
+
             {% if not user.is_viceprincipal %}
-            <td> {{ stuff.secondstatus }}</td>
+              {% if stuff.secondstatus == "Pending" %}
+                <td style="color: orange"> {{ stuff.secondstatus }}</td>
+              {% elif stuff.secondstatus == "Approved" %}
+                <td style="color: green"> {{ stuff.secondstatus }}</td>
+              {% else %}
+                <td style="color: red"> {{ stuff.secondstatus }}</td>
+              {% endif %}
             {% endif %}
-            <td> {{ stuff.finalstatus }}</td>
+
+            {% if stuff.finalstatus == "Pending" %}
+              <td style="color: orange"> {{ stuff.finalstatus }}</td>
+            {% elif stuff.finalstatus == "Approved" %}
+              <td style="color: green"> {{ stuff.finalstatus }}</td>
+            {% else %}
+              <td style="color: red"> {{ stuff.finalstatus }}</td>
+            {% endif %}
             <td><a href="{% url 'profiledetail' myid=stuff.id %}"> Detail </a></td>        </tr>
         {% endif %}
         {% endif %}

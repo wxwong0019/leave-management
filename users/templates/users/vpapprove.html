@@ -18,7 +18,7 @@
                     <p class="text-secondary">From : {{ obj.startdate }}</p>
                     <p class="text-secondary">To : {{ obj.enddate }}</p>
                     {% endif %}
-                    {% if obj.nonteachertimeofftype == 'Over Time' %}
+                    {% if obj.nonteachertimeofftype == 'Overtime' or obj.nonteachertimeofftype == 'Overtime Compensatory Leave' %}
                     <p class="text-secondary">Estimated Hour (hrs): {{ obj.duration }}</p>
                     {% else %}
                     <p class="text-secondary">Estimated Day (days): {{ obj.duration }}</p>
@@ -78,7 +78,7 @@
         {% csrf_token %}
         <fieldset class='form-group'>
             <legend class='border-bottom mb-4'> Vice Principal Validation </legend>
-            {% if obj.alltimeofftype == 'Official Leave (In School)' or obj.alltimeofftype == 'Official Leave (Outside)' or obj.alltimeofftype == 'Over Time' %}
+            {% if obj.alltimeofftype == 'Official Leave (In School)' or obj.alltimeofftype == 'Official Leave (Outside)' or obj.alltimeofftype == 'Overtime' %}
             <input type="checkbox" id="checkbox1" onclick="changeHideStatus()" />
             <label for="checkbox1">Reassign Application</label><br>
             <div class="endtimefield hide" id='input2'>{{ u_form.pickvp|as_crispy_field }}</div>

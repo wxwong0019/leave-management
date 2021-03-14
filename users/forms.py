@@ -430,6 +430,7 @@ class GroupApplyForm(forms.ModelForm):
 			'period',
 			'reason',
 		]
+	
 
 	def clean(self):
 		cleaned_data = super().clean()

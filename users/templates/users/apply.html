@@ -176,12 +176,13 @@
                 if (element.value == 'Overtime') {
                     document.getElementById("checkbox1").checked = true;
                     document.getElementById("leavetitle").innerHTML = "Overtime Request"; 
-                    document.getElementById("thankyou").innerHTML = "~ Thank you for your contribution :)";
+                    document.getElementById("thankyou").innerHTML = "Thank you for your contribution!";
                     console.log("test1");
                     changeHideStatus();
                 } else {
                     document.getElementById("checkbox1").checked = false;
                     document.getElementById("leavetitle").innerHTML = "Leave Request";
+                    document.getElementById("thankyou").innerHTML = "";
                     changeHideStatus();
                     console.log("test2");
                 }

@@ -27,9 +27,21 @@
                     <div class="check">
                         <input type="checkbox" id="checkbox1" onclick="changeHideStatus()" />
                         <label for="checkbox1">Time Option</label>
-                    </div><br />
+                    </div>
+                    <div class="check">
+                        <input type="checkbox" id="checkboxPeriod" onclick="changeHideStatusPeriod()" />
+                        <label for="checkboxPeriod">Period (Optional)</label>
+
+                    </div>
+                    <div class="check">
+                        <input type="checkbox" id="checkboxWholeDay" onclick="wholeDay()"/>
+                        <label for="checkboxWholeDay">Whole Day (Optional)</label>
+                    </div>
+                    <br />
                 </div>
-                <div class="period">{{ form.period| as_crispy_field }}<div style="font-weight: lighter; font-style: italic;"> * Hold control or command to select more</div></div>
+                <div class="period hide" id='periodId'>{{ form.period| as_crispy_field }}
+                    <div style="font-weight: lighter; font-style: italic;"> * Hold control or command to select more</div> 
+                </div>
                
                     
                 
@@ -47,8 +59,77 @@
 <div style="font-weight: lighter; font-style: italic;"> * Hold control or command to select more than one Staff</div>
             <div class="picker">{{ form.reason|as_crispy_field }}</div>
             <script>
+                $(document).ready(function() {
+                $("#checkbox1").prop('checked', false);
+                // $("#id_nonteachertimeofftype").prop("selectedIndex","Sick Leave");
+                // $("#id_teachertimeofftype").prop("selectedIndex","Sick Leave");
+                $(showDiv('hidden_div', document.getElementById("id_nonteachertimeofftype")));
+                $(showDiv('hidden_div', document.getElementById("id_teachertimeofftype")));
+                $(changeHideStatus());
+                $(console.log("checking else"));
+                $("#id_pickvp").prop("selectedIndex","");
+                $("#id_pickmanager").prop("selectedIndex","");
+                $("#id_pickmanager").prop("required",false);
+                $("#id_pickvp").prop("required",false);
+            });
             let input1;
             let input2;
+             function changeHideStatus() {
+                if (document.getElementById("checkbox1").checked == true) {
+
+                    document.getElementById("input1").setAttribute("class", "starttimefield");
+                    document.getElementById("input2").setAttribute("class", "endtimefield");
+
+                    document.getElementById("id_starttime").value = "";
+                    document.getElementById("id_endtime").value = "";
+                    document.getElementById("checkboxWholeDay").checked = false
+                    document.getElementById("checkboxPeriod").checked = false
+                    changeHideStatusPeriod()
+                    document.getElementById("id_period").value = "";
+
+                    console.log("clicked"+ document.getElementById("id_endtime").value)
+
+                } else {
+                    document.getElementById("input1").setAttribute("class", "hide starttimefield");
+                    document.getElementById("input2").setAttribute("class", "hide endtimefield");
+                    // console.log("unclicked" + document.getElementById("id_endtime").value)
+                    document.getElementById("id_starttime").value = "";
+                    document.getElementById("id_endtime").value = "";
+                    // console.log("unclicked" + document.getElementById("id_endtime").value)
+                }
+ 
+            }
+            function changeHideStatusPeriod() {
+                if (document.getElementById("checkboxPeriod").checked == true) {
+
+                    document.getElementById("periodId").setAttribute("class", "period");
+
+                    document.getElementById("id_period").value = "";
+                    document.getElementById("checkboxWholeDay").checked = false
+                    document.getElementById("checkbox1").checked = false
+                    changeHideStatus()
+                    document.getElementById("id_starttime").value = "";
+                    document.getElementById("id_endtime").value = "";
+
+                    console.log("clicked period"+ document.getElementById("id_period").value)
+                } else {
+                    document.getElementById("periodId").setAttribute("class", "period hide");
+                    document.getElementById("id_period").value = "";
+
+                }
+ 
+            }
+            function wholeDay() {
+                if (document.getElementById("checkboxWholeDay").checked == true) {
+
+                    document.getElementById("checkboxPeriod").checked = false;
+
+                    document.getElementById("checkbox1").checked = false;
+                    changeHideStatusPeriod();
+                    changeHideStatus();
+                } 
+ 
+            }
 
             function textAreaAdjust() {
               element = document.getElementById("display");
@@ -98,23 +179,9 @@
                 var str = display.innerHTML.slice(0, -2);
                 display.innerHTML = str;
             };
-            // function showSelectedValues(sel) {
-            //    document.getElementById("displaySelected").innerHTML += sel.options[sel.selectedIndex].text;
-            // }
-            function changeHideStatus() {
+            
 
-                if (document.getElementById("checkbox1").checked == true) {
-
-                    document.getElementById("input1").setAttribute("class", "starttimefield");
-                    document.getElementById("input2").setAttribute("class", "endtimefield");
-                } else {
-
-
-                    document.getElementById("input1").setAttribute("class", "hide starttimefield");
-                    document.getElementById("input2").setAttribute("class", "hide endtimefield");
-
-                }
-            }
+           
             </script>
             <script type="text/javascript">
             jQuery(document).ready(function() { jQuery('.timepicker').datepicker(); });

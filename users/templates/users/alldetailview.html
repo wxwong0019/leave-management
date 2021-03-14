@@ -16,19 +16,19 @@
           <p class="text-secondary">Type of Leave : {{ obj.alltimeofftype }}</p>
           {% if obj.user.is_teacher %}
             {% if obj.teachertimeofftype == 'Casual Leave' %}
-              <p class="text-secondary">Casual leave : {{ applicant.casualleave }}</p>
+              <p class="text-secondary">Casual leave Balance day(s): {{ applicant.casualleave }}</p>
             {% elif obj.teachertimeofftype == 'Sick Leave'%}
-              <p class="text-secondary">Sick leave : {{ applicant.sickleave }}</p>
+              <p class="text-secondary">Sick leave Balance day(s): {{ applicant.sickleave }}</p>
             
             {% endif %}
               
           {% else %}
             {% if obj.nonteachertimeofftype == 'Annual Leave' %}
-              <p class="text-secondary">Annual leave : {{ applicant.annualleave }}</p>
+              <p class="text-secondary">Annual leave Balance day(s): {{ applicant.annualleave }}</p>
             {% elif obj.nonteachertimeofftype == 'Sick Leave'%}
-              <p class="text-secondary">Sick leave : {{ applicant.sickleave }}</p>
-            {% elif obj.nonteachertimeofftype == 'Over Time'%}
-              <p class="text-secondary">Compensated Leave : {{ applicant.compensatedleave }}</p>
+              <p class="text-secondary">Sick leave Balance day(s) : {{ applicant.sickleave }}</p>
+            {% elif obj.nonteachertimeofftype == 'Overtime' or obj.nonteachertimeofftype == 'Overtime Compensatory Leave' %}
+              <p class="text-secondary">Overtime Balance hour(s) : {{ applicant.compensatedleave }}</p>
             {% endif %}
           {% endif %}
           <p class="text-secondary">Start Date : {{ obj.startdate }}</p>
@@ -38,9 +38,18 @@
           <p class="text-secondary">End Time : {{ obj.endtime }}</p>
           {% endif %}
           {% if obj.finalduration == None %}
-            <p class="text-secondary">Duration : {{ obj.duration }}</p>
+            {% if obj.nonteachertimeofftype == 'Overtime' or obj.nonteachertimeofftype == 'Overtime Compensatory Leave' %}
+                <p class="text-secondary">Estimated Hour (hrs): {{ obj.duration }}</p>
+              {% else %}
+                <p class="text-secondary">Estimated Day (days): {{ obj.duration }}</p>
+              {% endif %}
+
           {% else %}
-            <p class="text-secondary">Duration : {{ obj.finalduration }}</p>
+            {% if obj.nonteachertimeofftype == 'Overtime' or obj.nonteachertimeofftype == 'Overtime Compensatory Leave' %}
+                <p class="text-secondary">Approved Hour (hrs): {{ obj.finalduration }}</p>
+              {% else %}
+                <p class="text-secondary">Approved Day (days): {{ obj.finalduration }}</p>
+              {% endif %}
           {% endif %}
 
           <p class="text-secondary">Applicant Reason : {{ obj.reason }}</p>

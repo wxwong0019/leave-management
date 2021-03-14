@@ -99,7 +99,7 @@
                 <div class="reason">{{ form.reason|as_crispy_field }}</div>
             </fieldset>
             <div class='form-group'>
-                <button name="modify" type="submit" class="btn btn-primary">Modify</button>
+                <button name="modify" type="submit" class="btn btn-danger">Modify</button>
             </div>
         </form>
         {% endif %}
@@ -110,22 +110,22 @@
           <form method = 'POST' enctype='multipart/form-data' onsubmit="return confirm('Just want to make sure DID YOU DOUBLE CHECK?');"> 
             {% csrf_token %}
             <fieldset class='form-group'>
-              <legend class='border-bottom mb-4'> Cancel Application </legend>
+              <legend class='border-bottom mb-4'> Withdraw Application </legend>
               {{ u_form|crispy }}
 
             </fieldset>
             <div class='form-group'>
-              <button name="cancel" type="submit" class="btn btn-primary" onclick="return confirm('*** WARNING : Check your entry as this is an irreversible action. Do you really want to submit? ***');" >Cancel</button>
+              <button name="cancel" type="submit" class="btn btn-danger" onclick="return confirm(' WARNING : Do you really want to withdraw?');" >Withdraw</button>
             </div>
           </form>
         {% else %}
           <form> 
             <fieldset class='form-group'>
-              <legend class='border-bottom mb-4'> Cancel Application </legend>
-              <div style="font-weight: lighter; ">**Please contact Secretary to Cancel**</div>
+              <legend class='border-bottom mb-4'> Withdraw Application </legend>
+              <div style="font-weight: lighter; ">**Please contact Secretary to Withdraw**</div>
             </fieldset>
             <div class='form-group'>
-              <button type="submit" class="btn btn-primary" disabled="">Cancel</button>
+              <button type="submit" class="btn btn-danger" disabled="">Withdraw</button>
             </div>
           </form>
 
@@ -181,7 +181,7 @@
             
         </fieldset>
         <div class='form-group'>
-            <button name="modify" type="submit" class="btn btn-primary">Modify</button>
+            <button name="modify" type="submit" class="btn btn-danger">Modify</button>
         </div>
     </form>
     {% endif %}
@@ -191,22 +191,22 @@
       <form method = 'POST' enctype='multipart/form-data' onsubmit="return confirm('Just want to make sure DID YOU DOUBLE CHECK?');"> 
         {% csrf_token %}
         <fieldset class='form-group'>
-          <legend class='border-bottom mb-4'> Cancel Application </legend>
+          <legend class='border-bottom mb-4'> Withdraw Application </legend>
           {{ u_form|crispy }}
 
         </fieldset>
         <div class='form-group'>
-          <button name="cancel" type="submit" class="btn btn-primary" onclick="return confirm('*** WARNING : Check your entry as this is an irreversible action. Do you really want to submit? ***');" >Cancel</button>
+          <button name="cancel" type="submit" class="btn btn-danger" onclick="return confirm(' WARNING : Do you really want to withdraw?');" >Withdraw</button>
         </div>
       </form>
     {% else %}
       <form> 
         <fieldset class='form-group'>
-          <legend class='border-bottom mb-4'> Cancel Application </legend>
-          <div style="font-weight: lighter; ">**Please contact Secretary to Cancel**</div>
+          <legend class='border-bottom mb-4'> Withdraw Application </legend>
+          <div style="font-weight: lighter; ">**Please contact Secretary to Withdraw**</div>
         </fieldset>
         <div class='form-group'>
-          <button type="submit" class="btn btn-primary" disabled="">Cancel</button>
+          <button type="submit" class="btn btn-danger" disabled="">Withdraw</button>
         </div>
       </form>
 
@@ -261,7 +261,7 @@
             
         </fieldset>
         <div class='form-group'>
-            <button name="modify" type="submit" class="btn btn-primary">Modify</button>
+            <button name="modify" type="submit" class="btn btn-danger">Modify</button>
         </div>
     </form>
     {% endif %}
@@ -271,22 +271,22 @@
       <form method = 'POST' enctype='multipart/form-data' onsubmit="return confirm('Just want to make sure DID YOU DOUBLE CHECK?');"> 
         {% csrf_token %}
         <fieldset class='form-group'>
-          <legend class='border-bottom mb-4'> Cancel Application </legend>
+          <legend class='border-bottom mb-4'> Withdraw Application </legend>
           {{ u_form|crispy }}
 
         </fieldset>
         <div class='form-group'>
-          <button name="cancel" type="submit" class="btn btn-primary" onclick="return confirm('*** WARNING : Check your entry as this is an irreversible action. Do you really want to submit? ***');" >Cancel</button>
+          <button name="cancel" type="submit" class="btn btn-danger" onclick="return confirm(' WARNING : Do you really want to withdraw?');" >Withdraw</button>
         </div>
       </form>
     {% else %}
       <form> 
         <fieldset class='form-group'>
-          <legend class='border-bottom mb-4'> Cancel Application </legend>
-          <div style="font-weight: lighter; ">**Please contact Secretary to Cancel**</div>
+          <legend class='border-bottom mb-4'> Withdraw Application </legend>
+          <div style="font-weight: lighter; ">**Please contact Secretary to Withdraw**</div>
         </fieldset>
         <div class='form-group'>
-          <button type="submit" class="btn btn-primary" disabled="">Cancel</button>
+          <button type="submit" class="btn btn-danger" disabled="">Withdraw</button>
         </div>
       </form>
 
@@ -296,11 +296,11 @@
     {% else %}
       <form> 
         <fieldset class='form-group'>
-          <legend class='border-bottom mb-4'> Cancel Application </legend>
-          <div style="font-weight: lighter; ">**Please contact Secretary to Cancel**</div>
+          <legend class='border-bottom mb-4'> Withdraw Application </legend>
+          <div style="font-weight: lighter; ">**Please contact Secretary to Withdraw**</div>
         </fieldset>
         <div class='form-group'>
-          <button type="submit" class="btn btn-primary" disabled="">Cancel</button>
+          <button type="submit" class="btn btn-danger" disabled="">Withdraw</button>
         </div>
       </form>
     {% endif %}

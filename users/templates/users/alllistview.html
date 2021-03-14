@@ -61,9 +61,29 @@
 				<td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
 				<td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
 			{% endif %}	
-			<td> {{ stuff.firststatus }}</td>
-			<td> {{ stuff.secondstatus }}</td>
-			<td>{{ stuff.finalstatus }}</td>
+			{% if stuff.firststatus == "Pending" %}
+				<td style="color: orange"> {{ stuff.firststatus }}</td>
+			{% elif stuff.firststatus == "Approved" %}
+				<td style="color: green"> {{ stuff.firststatus }}</td>
+			{% else %}
+				<td style="color: red"> {{ stuff.firststatus }}</td>
+			{% endif %}
+
+			{% if stuff.secondstatus == "Pending" %}
+				<td style="color: orange"> {{ stuff.secondstatus }}</td>
+			{% elif stuff.secondstatus == "Approved" %}
+				<td style="color: green"> {{ stuff.secondstatus }}</td>
+			{% else %}
+				<td style="color: red"> {{ stuff.secondstatus }}</td>
+			{% endif %}
+
+			{% if stuff.finalstatus == "Pending" %}
+              <td style="color: orange"> {{ stuff.finalstatus }}</td>
+            {% elif stuff.finalstatus == "Approved" %}
+              <td style="color: green"> {{ stuff.finalstatus }}</td>
+            {% else %}
+              <td style="color: red"> {{ stuff.finalstatus }}</td>
+            {% endif %}
 			<td> {{ stuff.attachmentrequired}} </td>
 			<td> {{ stuff.attachmentreceived}} </td>
 			<td><a href = "{% url 'alldetailview' myid=stuff.id %}">Click</td></a>
@@ -82,8 +102,22 @@
 				<td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
 			{% endif %}	
 			<td> Not Applicable</td>
-			<td> {{ stuff.secondstatus }}</td>
-			<td>{{ stuff.finalstatus }}</td>
+
+			{% if stuff.secondstatus == "Pending" %}
+				<td style="color: orange"> {{ stuff.secondstatus }}</td>
+			{% elif stuff.secondstatus == "Approved" %}
+				<td style="color: green"> {{ stuff.secondstatus }}</td>
+			{% else %}
+				<td style="color: red"> {{ stuff.secondstatus }}</td>
+			{% endif %}
+
+			{% if stuff.finalstatus == "Pending" %}
+              <td style="color: orange"> {{ stuff.finalstatus }}</td>
+            {% elif stuff.finalstatus == "Approved" %}
+              <td style="color: green"> {{ stuff.finalstatus }}</td>
+            {% else %}
+              <td style="color: red"> {{ stuff.finalstatus }}</td>
+            {% endif %}
 			<td> {{ stuff.attachmentrequired}} </td>
 			<td> {{ stuff.attachmentreceived}} </td>
 			<td><a href = "{% url 'alldetailview' myid=stuff.id %}">Click</a></td>

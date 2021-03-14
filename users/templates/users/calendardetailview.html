@@ -57,7 +57,7 @@
   <form method = 'POST' enctype='multipart/form-data' onsubmit="return confirm('Just want to make sure DID YOU DOUBLE CHECK?');"> 
     {% csrf_token %}
     <fieldset class='form-group'>
-      <legend class='border-bottom mb-4'> Document Check </legend>
+      <legend class='border-bottom mb-4'> Calendar Check </legend>
       <div class="check">
       {{ u_form.calendarcheck|as_crispy_field }}<br>
       {{ u_form.secretarycomment|as_crispy_field }}

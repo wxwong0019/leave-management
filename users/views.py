@@ -327,7 +327,7 @@ def nonteacherapply(request):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
-			if nonteachertimeofftype == 'Over Time':
+			if nonteachertimeofftype == 'Overtime' or nonteachertimeofftype == 'Overtime Compensatory Leave':
 				duration = decimal.Decimal(hr) * userid.ratio
 			else:
 				duration = my_round(dur)
@@ -705,7 +705,7 @@ def applyforapply(request, *args, **kwargs):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
-			if nonteachertimeofftype == 'Over Time':
+			if nonteachertimeofftype == 'Overtime'  or nonteachertimeofftype == 'Overtime Compensatory Leave':
 				duration = decimal.Decimal(hr) * userid.ratio
 			else:
 				duration = my_round(dur)
@@ -799,7 +799,7 @@ def applyforapply2(request, *args, **kwargs):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
-			if nonteachertimeofftype == 'Over Time':
+			if nonteachertimeofftype == 'Overtime' or nonteachertimeofftype == 'Overtime Compensatory Leave':
 				duration = hr * userid.ratio
 			else:
 				duration = my_round(dur)
@@ -1970,7 +1970,7 @@ def documentdetailview(request, myid):
 
 @login_required
 def calendarlistview(req):
-	queryset = LeaveApplication.objects.filter(Q(calendarcheck=False) & ~Q(nonteachertimeofftype="Over Time")).order_by('startdate')
+	queryset = LeaveApplication.objects.filter(Q(calendarcheck=False) & ~Q(nonteachertimeofftype="Overtime")).order_by('startdate')
 	# myFilter = LeaveApplicationFilter(req.GET, queryset=queryset)
 
 	# queryset = myFilter.qs

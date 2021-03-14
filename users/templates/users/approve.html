@@ -20,7 +20,7 @@
                     <p class="text-secondary">From : {{ obj.startdate }}</p>
                     <p class="text-secondary">To : {{ obj.enddate }}</p>
                     {% endif %}
-                    {% if obj.nonteachertimeofftype == 'Over Time' %}
+                    {% if obj.nonteachertimeofftype == 'Overtime' or obj.nonteachertimeofftype == 'Overtime Compensatory Leave' %}
                     <p class="text-secondary">Estimated Hour (hrs): {{ obj.duration }}</p>
                     {% else %}
                     <p class="text-secondary">Estimated Day (days): {{ obj.duration }}</p>

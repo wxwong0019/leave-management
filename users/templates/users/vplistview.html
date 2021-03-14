@@ -33,9 +33,11 @@
                     <td class = "text-muted"> Not Applicable</td>
                     {% else %}
                         {% if stuff.firststatus == "Pending" %}
-                            <td style="color: red" > {{stuff.firststatus}}</td>
+                            <td style="color: orange"> {{ stuff.firststatus }}</td>
+                        {% elif stuff.firststatus == "Approved" %}
+                            <td style="color: green"> {{ stuff.firststatus }}</td>
                         {% else %}
-                            <td style="color: green" > {{stuff.firststatus}}</td>
+                            <td style="color: red"> {{ stuff.firststatus }}</td>
                         {% endif %}
                     {% endif %}
                     
@@ -59,10 +61,12 @@
                     <td class = "text-muted"> Not Applicable</td>
                     {% else %}
                      {% if stuff.firststatus == "Pending" %}
-                                <td style="color: red" > {{stuff.firststatus}}</td>
-                            {% else %}
-                                <td style="color: green" > {{stuff.firststatus}}</td>
-                            {% endif %}
+                            <td style="color: orange"> {{ stuff.firststatus }}</td>
+                        {% elif stuff.firststatus == "Approved" %}
+                            <td style="color: green"> {{ stuff.firststatus }}</td>
+                        {% else %}
+                            <td style="color: red"> {{ stuff.firststatus }}</td>
+                        {% endif %}
                     {% endif %}
                 </tr>
             {% endif %}
@@ -81,10 +85,12 @@
             {% endif %}
             {% if stuff.user.is_nonteacher and stuff.user.NonTeachingStaffDetail.supervisor != None %}
                 {% if stuff.firststatus == "Pending" %}
-                                <td style="color: red" > {{stuff.firststatus}}</td>
-                            {% else %}
-                                <td style="color: green" > {{stuff.firststatus}}</td>
-                            {% endif %}
+                    <td style="color: orange"> {{ stuff.firststatus }}</td>
+                {% elif stuff.firststatus == "Approved" %}
+                    <td style="color: green"> {{ stuff.firststatus }}</td>
+                {% else %}
+                    <td style="color: red"> {{ stuff.firststatus }}</td>
+                {% endif %}
             {% else %}
             <td class = "text-muted"> Not Applicable</td>
             {% endif %}
@@ -131,10 +137,17 @@
                         <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
                         {% endif %}
                         {% if stuff.firststatus == None or stuff.user.NonTeachingStaffDetail.supervisor == None or stuff.user.is_teacher %}
-                        <td> Not Applicable</td>
+                    <td class = "text-muted"> Not Applicable</td>
+                    {% else %}
+                        {% if stuff.firststatus == "Pending" %}
+                            <td style="color: orange"> {{ stuff.firststatus }}</td>
+                        {% elif stuff.firststatus == "Approved" %}
+                            <td style="color: green"> {{ stuff.firststatus }}</td>
                         {% else %}
-                        <td> {{stuff.firststatus}}</td>
+                            <td style="color: red"> {{ stuff.firststatus }}</td>
                         {% endif %}
+
+                    {% endif %}
                     </tr>
 
             {% endif %}
