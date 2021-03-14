@@ -710,11 +710,7 @@ def applyforapply(request, *args, **kwargs):
 			else:
 				duration = my_round(dur)
 
-			if duration <= 1 and request.user.is_teacher:
-				firststatus = 'Action Required'
-				secondstatus = 'Action Required'
-				secretarystatus = 'Action Required'
-				finalstatus = 'Action Required'
+			
 				
 
 			my_list = "";
@@ -724,6 +720,11 @@ def applyforapply(request, *args, **kwargs):
 					f.save()			
 					messages.success(request, f'Successfully Applied')
 				elif stuff.is_viceprincipal or stuff.is_teacher or stuff.is_principal or stuff.is_supervisor:	
+					if duration <= 1 :
+						firststatus = 'Action Required'
+						secondstatus = 'Action Required'
+						secretarystatus = 'Action Required'
+						finalstatus = 'Action Required'
 					f = LeaveApplication.objects.create(emergencystatus=emergencystatus,startdate=startdate, enddate=enddate, starttime=starttime, endtime=endtime, firststatus=firststatus, secondstatus=secondstatus,secretarystatus= secondstatus, finalstatus=finalstatus, teachertimeofftype=teachertimeofftype, alltimeofftype=teachertimeofftype,appliedby = appliedby,reason=reason, user=stuff, stafftype = "Teacher",duration=duration)
 					f.save()			
 					messages.success(request, f'Successfully Applied')
