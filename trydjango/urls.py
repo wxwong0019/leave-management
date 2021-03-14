@@ -15,13 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from page.views import homepage_view, about_view
-from Timeoff.views import (
-    timeoff_create_view, 
-    dynamic_lookup_view,
-    timeoff_delete_view,
-    timeoff_list_view,
-)
+
 from users import views as user_views
 from django.contrib.auth import views as auth_views
 from django.conf import settings
@@ -30,10 +24,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',user_views.redirect_view),
-    path('home/', homepage_view),
-    path('about/', about_view),
-    path('timeoff/', include('Timeoff.urls')),
-    # path('register/', user_views.register, name='register'),
+
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html',redirect_authenticated_user=True), name='login'),
     path('logout/', user_views.logout_view, name='logout'),
     path('profile/', user_views.profile, name='profile'),
