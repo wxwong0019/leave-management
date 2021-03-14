@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     'django_filters',
     # own
     'rest_framework',
-    'Timeoff',
-    'page',
     'users',
     'crispy_forms',
     'customstaff'
