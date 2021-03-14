@@ -327,7 +327,7 @@ def nonteacherapply(request):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
-			if nonteachertimeofftype == 'Overtime' or nonteachertimeofftype == 'Overtime Compensatory Leave':
+			if nonteachertimeofftype == 'Over Time':
 				duration = decimal.Decimal(hr) * userid.ratio
 			else:
 				duration = my_round(dur)
@@ -705,7 +705,7 @@ def applyforapply(request, *args, **kwargs):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
-			if nonteachertimeofftype == 'Overtime'  or nonteachertimeofftype == 'Overtime Compensatory Leave':
+			if nonteachertimeofftype == 'Over Time':
 				duration = decimal.Decimal(hr) * userid.ratio
 			else:
 				duration = my_round(dur)
@@ -724,6 +724,11 @@ def applyforapply(request, *args, **kwargs):
 					f.save()			
 					messages.success(request, f'Successfully Applied')
 				elif stuff.is_viceprincipal or stuff.is_teacher or stuff.is_principal or stuff.is_supervisor:	
+					if duration <= 1 :
+						firststatus = 'Action Required'
+						secondstatus = 'Action Required'
+						secretarystatus = 'Action Required'
+						finalstatus = 'Action Required'
 					f = LeaveApplication.objects.create(emergencystatus=emergencystatus,startdate=startdate, enddate=enddate, starttime=starttime, endtime=endtime, firststatus=firststatus, secondstatus=secondstatus,secretarystatus= secondstatus, finalstatus=finalstatus, teachertimeofftype=teachertimeofftype, alltimeofftype=teachertimeofftype,appliedby = appliedby,reason=reason, user=stuff, stafftype = "Teacher",duration=duration)
 					f.save()			
 					messages.success(request, f'Successfully Applied')
@@ -799,7 +804,7 @@ def applyforapply2(request, *args, **kwargs):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
-			if nonteachertimeofftype == 'Overtime' or nonteachertimeofftype == 'Overtime Compensatory Leave':
+			if nonteachertimeofftype == 'Over Time':
 				duration = hr * userid.ratio
 			else:
 				duration = my_round(dur)
@@ -1970,7 +1975,7 @@ def documentdetailview(request, myid):
 
 @login_required
 def calendarlistview(req):
-	queryset = LeaveApplication.objects.filter(Q(calendarcheck=False) & ~Q(nonteachertimeofftype="Overtime")).order_by('startdate')
+	queryset = LeaveApplication.objects.filter(Q(calendarcheck=False) & ~Q(nonteachertimeofftype="Over Time")).order_by('startdate')
 	# myFilter = LeaveApplicationFilter(req.GET, queryset=queryset)
 
 	# queryset = myFilter.qs
