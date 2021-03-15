@@ -125,9 +125,10 @@ def profiledetail(request, myid):
 			if request.user.is_nonteacher:
 				obj.nonteachertimeofftype = form.cleaned_data.get('nonteachertimeofftype')
 				obj.pickmanager = form.cleaned_data.get('pickmanager')
+				obj.alltimeofftype = obj.nonteachertimeofftype
 			else:
 				obj.teachertimeofftype = form.cleaned_data.get('teachertimeofftype')
-			
+				obj.alltimeofftype = obj.teachertimeofftype
 			obj.period = form.cleaned_data.get('period')
 			
 			def my_round(x):
@@ -144,10 +145,15 @@ def profiledetail(request, myid):
 				end_time = obj.endtime.hour + obj.endtime.minute/60
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
-			obj.duration = my_round(dur)
+	
+			if obj.alltimeofftype == 'Overtime' or obj.alltimeofftype == 'Overtime Compensatory Leave':
+				obj.duration = decimal.Decimal(hr) * applicant.ratio
+			else:
+				obj.duration = my_round(dur)
 						
 			obj.save()
 			messages.success(request, f'Modified!')
+			return redirect('profile')	
 		elif u_form.is_valid() and 'cancel' in request.POST:
 			if obj.finalstatus == "Pending" and obj.secondstatus == "Pending" and obj.firststatus == "Pending":
 
@@ -180,8 +186,8 @@ def profileapprove(request, myid):
 								# instance=request.user)
 		
 		if u_form.is_valid():
-			obj.firststatus = 'Pending'
-			obj.secondstatus = 'Pending'
+			obj.firststatus = 'Approved'
+			obj.secondstatus = 'Approved'
 			obj.secretarystatus = 'Pending'
 			obj.finalstatus = 'Pending'
 			# u_form.save()
@@ -221,7 +227,7 @@ def login_success(request):
 	elif request.user.type == User.Types.VICEPRINCIPAL:
 		# user is an admin
 		messages.success(request, f'Welcome')
-		return redirect("teacherapply")
+		return redirect("vplistview")
 	elif request.user.type == User.Types.PRINCIPAL:
 		# user is an admin
 		messages.success(request, f'Welcome')
@@ -1211,22 +1217,108 @@ def papprove(request, myid):
 		u_form = FinalValidate(request.POST, instance=obj)
 		duration = u_form.data['finalduration']
 		if u_form.is_valid() and obj.finalstatus == 'Approved':
-						
-			if u_form.is_valid() and obj.user.is_nonteacher:
-				if obj.nonteacherchangetimeofftype is None:
-					if obj.nonteachertimeofftype == 'Annual Leave':
-						if obj.finalduration is None:
-							modify = obj.duration
-							applicant.annualleave = applicant.annualleave - abs(modify)
+			if obj.user != None:			
+				if u_form.is_valid() and obj.user.is_nonteacher:
+					if obj.nonteacherchangetimeofftype is None:
+						if obj.nonteachertimeofftype == 'Annual Leave':
+							if obj.finalduration is None:
+								modify = obj.duration
+								applicant.annualleave = applicant.annualleave - abs(modify)
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+
+								
+
+							else:
+								modify = obj.finalduration
+								applicant.annualleave = applicant.annualleave - abs(modify)
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+
+								
+
+
+						elif obj.nonteachertimeofftype == 'Sick Leave':
+							if obj.finalduration is None:
+								modify = obj.duration
+								applicant.sickleave = applicant.sickleave - abs(modify)
+								applicant.sickleavecounter = applicant.sickleavecounter + abs(modify)
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+							else:
+								modify = obj.finalduration
+								applicant.sickleave = applicant.sickleave - abs(modify)
+								applicant.sickleavecounter = applicant.sickleavecounter + abs(modify)
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+						elif obj.nonteachertimeofftype == 'Overtime':
+							if obj.finalduration is None:
+								modify = obj.duration
+								applicant.compensatedleave = applicant.compensatedleave + modify
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+							else:
+								modify = obj.finalduration
+								applicant.compensatedleave = applicant.compensatedleave + modify
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+						elif obj.nonteachertimeofftype == 'Overtime Compensatory Leave':
+							if obj.finalduration is None:
+								modify = obj.duration
+								applicant.compensatedleave = applicant.compensatedleave - modify
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+							else:
+								modify = obj.finalduration
+								applicant.compensatedleave = applicant.compensatedleave - modify
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+						else:
 							u_form.save()
-							applicant.save()
-							obj.finalduration = modify
-							obj.updated_at = datetime.datetime.now()
-							obj.save()
 							messages.success(request, f'Sucessfully Approved')
+					elif obj.nonteacherchangetimeofftype == 'Annual Leave':  #change leave type for non teacher
 
-							
-
+						if obj.finalduration is None:
+								modify = obj.duration
+								applicant.annualleave = applicant.annualleave - abs(modify)
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
 						else:
 							modify = obj.finalduration
 							applicant.annualleave = applicant.annualleave - abs(modify)
@@ -1236,60 +1328,17 @@ def papprove(request, myid):
 							obj.updated_at = datetime.datetime.now()
 							obj.save()
 							messages.success(request, f'Sucessfully Approved')
-
-							
-
-
-					elif obj.nonteachertimeofftype == 'Sick Leave':
+					elif obj.nonteacherchangetimeofftype == 'Overtime Compensatory Leave':  #change leave type for non teacher
+					
 						if obj.finalduration is None:
-							modify = obj.duration
-							applicant.sickleave = applicant.sickleave - abs(modify)
-							applicant.sickleavecounter = applicant.sickleavecounter + abs(modify)
-							u_form.save()
-							applicant.save()
-							obj.finalduration = modify
-							obj.updated_at = datetime.datetime.now()
-							obj.save()
-							messages.success(request, f'Sucessfully Approved')
-						else:
-							modify = obj.finalduration
-							applicant.sickleave = applicant.sickleave - abs(modify)
-							applicant.sickleavecounter = applicant.sickleavecounter + abs(modify)
-							u_form.save()
-							applicant.save()
-							obj.finalduration = modify
-							obj.updated_at = datetime.datetime.now()
-							obj.save()
-							messages.success(request, f'Sucessfully Approved')
-					elif obj.nonteachertimeofftype == 'Overtime':
-						if obj.finalduration is None:
-							modify = obj.duration
-							applicant.compensatedleave = applicant.compensatedleave + modify
-							u_form.save()
-							applicant.save()
-							obj.finalduration = modify
-							obj.updated_at = datetime.datetime.now()
-							obj.save()
-							messages.success(request, f'Sucessfully Approved')
-						else:
-							modify = obj.finalduration
-							applicant.compensatedleave = applicant.compensatedleave + modify
-							u_form.save()
-							applicant.save()
-							obj.finalduration = modify
-							obj.updated_at = datetime.datetime.now()
-							obj.save()
-							messages.success(request, f'Sucessfully Approved')
-					elif obj.nonteachertimeofftype == 'Overtime Compensatory Leave':
-						if obj.finalduration is None:
-							modify = obj.duration
-							applicant.compensatedleave = applicant.compensatedleave - modify
-							u_form.save()
-							applicant.save()
-							obj.finalduration = modify
-							obj.updated_at = datetime.datetime.now()
-							obj.save()
-							messages.success(request, f'Sucessfully Approved')
+								modify = obj.duration
+								applicant.compensatedleave = applicant.compensatedleave - modify
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
 						else:
 							modify = obj.finalduration
 							applicant.compensatedleave = applicant.compensatedleave - modify
@@ -1299,73 +1348,72 @@ def papprove(request, myid):
 							obj.updated_at = datetime.datetime.now()
 							obj.save()
 							messages.success(request, f'Sucessfully Approved')
-					else:
-						u_form.save()
-						messages.success(request, f'Sucessfully Approved')
-				elif obj.nonteacherchangetimeofftype == 'Annual Leave':  #change leave type for non teacher
+					elif obj.nonteacherchangetimeofftype == 'No-Pay Leave':  #change leave type for non teacher
+					
+						if obj.finalduration is None:
+								modify = obj.duration
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+						else:
+							modify = obj.finalduration
+							u_form.save()
+							applicant.save()
+							obj.finalduration = modify
+							obj.updated_at = datetime.datetime.now()
+							obj.save()
+							messages.success(request, f'Sucessfully Approved')
+				elif u_form.is_valid() and obj.user.is_teacher:
+					if obj.teacherchangetimeofftype is None:	
+						if obj.teachertimeofftype == 'Casual Leave':
+							if obj.finalduration is None:
+								modify = obj.duration
+								applicant.casualleave = applicant.casualleave - abs(modify)
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+							else:
+								modify = obj.finalduration
+								applicant.casualleave = applicant.casualleave - abs(modify)
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
 
-					if obj.finalduration is None:
-							modify = obj.duration
-							applicant.annualleave = applicant.annualleave - abs(modify)
+						elif obj.teachertimeofftype == 'Sick Leave':
+							if obj.finalduration is None:
+								modify = obj.duration
+								applicant.sickleave = applicant.sickleave - abs(modify)
+								applicant.sickleavecounter = applicant.sickleavecounter + abs(modify)
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+							else:
+								modify = obj.finalduration
+								applicant.sickleave = applicant.sickleave - abs(modify)
+								u_form.save()
+								applicant.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+						else:
 							u_form.save()
-							applicant.save()
-							obj.finalduration = modify
-							obj.updated_at = datetime.datetime.now()
-							obj.save()
 							messages.success(request, f'Sucessfully Approved')
-					else:
-						modify = obj.finalduration
-						applicant.annualleave = applicant.annualleave - abs(modify)
-						u_form.save()
-						applicant.save()
-						obj.finalduration = modify
-						obj.updated_at = datetime.datetime.now()
-						obj.save()
-						messages.success(request, f'Sucessfully Approved')
-				elif obj.nonteacherchangetimeofftype == 'Overtime Compensatory Leave':  #change leave type for non teacher
-				
-					if obj.finalduration is None:
-							modify = obj.duration
-							applicant.compensatedleave = applicant.compensatedleave - modify
-							u_form.save()
-							applicant.save()
-							obj.finalduration = modify
-							obj.updated_at = datetime.datetime.now()
-							obj.save()
-							messages.success(request, f'Sucessfully Approved')
-					else:
-						modify = obj.finalduration
-						applicant.compensatedleave = applicant.compensatedleave - modify
-						u_form.save()
-						applicant.save()
-						obj.finalduration = modify
-						obj.updated_at = datetime.datetime.now()
-						obj.save()
-						messages.success(request, f'Sucessfully Approved')
-				elif obj.nonteacherchangetimeofftype == 'No-Pay Leave':  #change leave type for non teacher
-				
-					if obj.finalduration is None:
-							modify = obj.duration
-							u_form.save()
-							applicant.save()
-							obj.finalduration = modify
-							obj.updated_at = datetime.datetime.now()
-							obj.save()
-							messages.success(request, f'Sucessfully Approved')
-					else:
-						modify = obj.finalduration
-						u_form.save()
-						applicant.save()
-						obj.finalduration = modify
-						obj.updated_at = datetime.datetime.now()
-						obj.save()
-						messages.success(request, f'Sucessfully Approved')
-			elif u_form.is_valid() and obj.user.is_teacher:
-				if obj.teacherchangetimeofftype is None:	
-					if obj.teachertimeofftype == 'Casual Leave':
+					elif obj.teacherchangetimeofftype == 'No-Pay Leave':  #change leave type for non teacher
 						if obj.finalduration is None:
 							modify = obj.duration
-							applicant.casualleave = applicant.casualleave - abs(modify)
 							u_form.save()
 							applicant.save()
 							obj.finalduration = modify
@@ -1374,54 +1422,15 @@ def papprove(request, myid):
 							messages.success(request, f'Sucessfully Approved')
 						else:
 							modify = obj.finalduration
-							applicant.casualleave = applicant.casualleave - abs(modify)
 							u_form.save()
 							applicant.save()
 							obj.finalduration = modify
 							obj.updated_at = datetime.datetime.now()
 							obj.save()
 							messages.success(request, f'Sucessfully Approved')
-
-					elif obj.teachertimeofftype == 'Sick Leave':
-						if obj.finalduration is None:
-							modify = obj.duration
-							applicant.sickleave = applicant.sickleave - abs(modify)
-							applicant.sickleavecounter = applicant.sickleavecounter + abs(modify)
-							u_form.save()
-							applicant.save()
-							obj.finalduration = modify
-							obj.updated_at = datetime.datetime.now()
-							obj.save()
-							messages.success(request, f'Sucessfully Approved')
-						else:
-							modify = obj.finalduration
-							applicant.sickleave = applicant.sickleave - abs(modify)
-							u_form.save()
-							applicant.save()
-							obj.finalduration = modify
-							obj.updated_at = datetime.datetime.now()
-							obj.save()
-							messages.success(request, f'Sucessfully Approved')
-					else:
-						u_form.save()
-						messages.success(request, f'Sucessfully Approved')
-				elif obj.teacherchangetimeofftype == 'No-Pay Leave':  #change leave type for non teacher
-					if obj.finalduration is None:
-						modify = obj.duration
-						u_form.save()
-						applicant.save()
-						obj.finalduration = modify
-						obj.updated_at = datetime.datetime.now()
-						obj.save()
-						messages.success(request, f'Sucessfully Approved')
-					else:
-						modify = obj.finalduration
-						u_form.save()
-						applicant.save()
-						obj.finalduration = modify
-						obj.updated_at = datetime.datetime.now()
-						obj.save()
-						messages.success(request, f'Sucessfully Approved')
+			else:
+				u_form.save()
+				messages.success(request, f'Sucessfully Approved')
 		elif u_form.is_valid() and obj.finalstatus == 'Denied':	
 			if u_form.is_valid():
 				u_form.save()
@@ -1442,24 +1451,47 @@ def papprove(request, myid):
 			for stuff in obj.period:
 				period_list+= stuff + ", ";
 		# messages.success(request, f'Successfully Applied')
-		template = render_to_string('users/email_principalapprove.html', {
-			'username':obj.user.username,
-			'type':obj.alltimeofftype,
-			'startdate':obj.startdate,
-			'starttime':obj.starttime,
-			'endtime': obj.endtime,
-			'enddate':obj.enddate,
-			'period':period_list,
-			'finalduration':obj.finalduration,
-			'finalstatus':obj.finalstatus,
-			'reason':obj.reason
-			})
-		send_mail(
-			'Result of Leave Application',
-			template,
-			'test@gmail.com',
-			[obj.user.email],
-			)
+		
+
+		if obj.users != None and obj.user == None:
+			for stuff in obj.users.all():
+				template = render_to_string('users/email_principalapprove.html', {
+				'username':stuff.username,
+				'type':obj.alltimeofftype,
+				'startdate':obj.startdate,
+				'starttime':obj.starttime,
+				'endtime': obj.endtime,
+				'enddate':obj.enddate,
+				'period':period_list,
+				'finalduration':obj.finalduration,
+				'finalstatus':obj.finalstatus,
+				'reason':obj.reason
+				})
+				send_mail(
+					'Leave Application Confirmation' ,
+					template,
+					'test@gmail.com',
+					[stuff.email],
+					)
+		if obj.user != None:
+			template = render_to_string('users/email_principalapprove.html', {
+					'username':obj.user.username,
+					'type':obj.alltimeofftype,
+					'startdate':obj.startdate,
+					'starttime':obj.starttime,
+					'endtime': obj.endtime,
+					'enddate':obj.enddate,
+					'period':period_list,
+					'finalduration':obj.finalduration,
+					'finalstatus':obj.finalstatus,
+					'reason':obj.reason
+					})
+			send_mail(
+				'Result of Leave Application',
+				template,
+				'test@gmail.com',
+				[obj.user.email],
+				)
 		return redirect('plistview') 
 	else:
 		u_form = FinalValidate(instance=obj)

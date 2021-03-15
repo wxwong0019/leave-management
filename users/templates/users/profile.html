@@ -87,7 +87,7 @@
             <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
             <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
             {% endif %}
-            {% if stuff.alltimeofftype == "Overtime" %}
+            {% if stuff.alltimeofftype == "Overtime" or stuff.alltimeofftype == "Overtime Compensatory Leave" %}
             <td> {{ stuff.duration }} hour(s)</td>
             {% else %}
             <td> {{ stuff.duration }} day(s)</td>
@@ -130,7 +130,7 @@
                       <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
                       <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
                       {% endif %}
-                      {% if stuff.alltimeofftype == "Overtime" %}
+                      {% if stuff.alltimeofftype == "Overtime" or stuff.alltimeofftype == "Overtime Compensatory Leave"%}
                       <td> {{ stuff.duration }} hour(s)</td>
                       {% else %}
                       <td> {{ stuff.duration }} day(s)</td>
@@ -177,7 +177,7 @@
                   <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
                   <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
                   {% endif %}
-                  {% if stuff.alltimeofftype == "Overtime" %}
+                  {% if stuff.alltimeofftype == "Overtime" or stuff.alltimeofftype == "Overtime Compensatory Leave" %}
                   <td> {{ stuff.duration }} hour(s)</td>
                   {% else %}
                   <td> {{ stuff.duration }} day(s)</td>

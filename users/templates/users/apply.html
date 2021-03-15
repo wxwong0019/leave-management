@@ -6,7 +6,7 @@
 {% endblock %}
 {% block content %}
 <div class="content-section-forapply">
-    <form method='POST' enctype="multipart/form-data">
+    <form method='POST' enctype="multipart/form-data" onsubmit="submiting()">
         {% csrf_token %}
         <fieldset class='form-group'>
             <div style="color: red; font-weight: bold;">{{ form.non_field_errors }}</div>
@@ -95,6 +95,9 @@
                 </div>
             </div>
             <div class="reason">{{ form.reason|as_crispy_field }}</div>
+            <div class='form-group'>
+                <button type="submit" class="btn btn-primary" id="myButton" >Apply</button>
+            </div>
             <script>
                 $(document).ready(function() {
                 $("#checkbox1").prop('checked', false);
@@ -113,6 +116,9 @@
             let input1;
             let input2;
 
+            function submiting(){
+                document.getElementById("myButton").setAttribute("disabled","");
+            }
             function changeHideStatus() {
                 if (document.getElementById("checkbox1").checked == true) {
 
@@ -215,9 +221,7 @@
             }
             </script>
         </fieldset>
-        <div class='form-group'>
-            <button type="submit" class="btn btn-primary">Apply</button>
-        </div>
+        
     </form>
 </div>
 {% endblock %}
