@@ -858,7 +858,7 @@ def incrementallview(request, *args, **kwargs):
 			f = form.save(commit=False)
 						
 			for stuff in userall:
-				if stuff.is_supervisor and stuff.is_teacher:
+				if stuff.is_supervisor:
 					supervisordetail = SupervisorDetail.objects.get(user=stuff)
 
 					num = supervisordetail.sickleave + supervisordetail.increment
@@ -886,7 +886,7 @@ def incrementallview(request, *args, **kwargs):
 					viceprincipaldetail.save()
 					f.save()			
 
-				elif stuff.is_nonteacher and not stuff.is_secretary:
+				elif stuff.is_nonteacher and not stuff.is_secretary and not stuff.is_supervisor:
 					nonteacherdetail = NonTeachingStaffDetail.objects.get(user=stuff)
 					num = nonteacherdetail.sickleave + nonteacherdetail.increment
 					if (num > nonteacherdetail.maxsickleave):
