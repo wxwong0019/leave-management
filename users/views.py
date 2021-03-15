@@ -634,7 +634,7 @@ def groupapplychangeview(request, myid):
 				'type':obj.alltimeofftype,
 				'startdate':obj.startdate,
 				'enddate':obj.enddate,
-				'period':obj.period_list,
+				'period':period_list,
 				'reason':obj.reason,
 				'applied_by':request.user.username
 				})
