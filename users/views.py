@@ -148,6 +148,8 @@ def profiledetail(request, myid):
 	
 			if obj.alltimeofftype == 'Overtime':
 				obj.duration = decimal.Decimal(hr) * applicant.ratio
+			elif obj.alltimeofftype == 'Overtime Compensatory Leave':
+				obj.duration = decimal.Decimal(hr)
 			else:
 				obj.duration = my_round(dur)
 						
@@ -335,6 +337,8 @@ def nonteacherapply(request):
 			
 			if nonteachertimeofftype == 'Overtime':
 				duration = decimal.Decimal(hr) * userid.ratio
+			elif nonteachertimeofftype == 'Overtime Compensatory Leave':
+				duration = decimal.Decimal(hr)
 			else:
 				duration = my_round(dur)
 				
@@ -713,6 +717,8 @@ def applyforapply(request, *args, **kwargs):
 			
 			if nonteachertimeofftype == 'Overtime' :
 				duration = decimal.Decimal(hr) * userid.ratio
+			elif nonteachertimeofftype == 'Overtime Compensatory Leave':
+				duration = decimal.Decimal(hr)
 			else:
 				duration = my_round(dur)
 
@@ -808,6 +814,8 @@ def applyforapply2(request, *args, **kwargs):
 			
 			if nonteachertimeofftype == 'Overtime' :
 				duration = decimal.Decimal(hr) * userid.ratio
+			elif nonteachertimeofftype == 'Overtime Compensatory Leave':
+				duration = decimal.Decimal(hr)
 			else:
 				duration = my_round(dur)
 
