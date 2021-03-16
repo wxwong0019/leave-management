@@ -121,11 +121,30 @@ def profiledetail(request, myid):
 			obj.endtime = form.cleaned_data.get('endtime')
 			obj.reason = form.cleaned_data.get('reason')
 			obj.pickvp = form.cleaned_data.get('pickvp')
+			obj.pickmanager = form.cleaned_data.get('pickmanager')
+			user = request.user
+			
 
 			if request.user.is_nonteacher:
+
+				#///////////////////////
+				superv = SupervisorDetail.objects.filter(user__username=request.user.NonTeachingStaffDetail.supervisor)
+				viceprincipal = VicePrincipalDetail.objects.filter(user__username=request.user.NonTeachingStaffDetail.viceprincipal)
+
+				if obj.pickmanager == None and not user.is_supervisor and superv!=None and not viceprincipal:
+					for stuff in superv:
+						obj.pickmanager = User.objects.get(username = stuff.user)
+														
+				elif obj.pickmanager == None and not user.is_supervisor and not superv and viceprincipal !=None:
+					for stuff in viceprincipal:
+						pickvp = User.objects.get(username = stuff.user)
+				elif user.is_supervisor:
+					obj.pickmanager = None
+					#//////////////////
 				obj.nonteachertimeofftype = form.cleaned_data.get('nonteachertimeofftype')
-				obj.pickmanager = form.cleaned_data.get('pickmanager')
 				obj.alltimeofftype = obj.nonteachertimeofftype
+					
+				
 			else:
 				obj.teachertimeofftype = form.cleaned_data.get('teachertimeofftype')
 				obj.alltimeofftype = obj.teachertimeofftype
