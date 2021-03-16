@@ -146,7 +146,7 @@ def profiledetail(request, myid):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 	
-			if obj.alltimeofftype == 'Overtime' or obj.alltimeofftype == 'Overtime Compensatory Leave':
+			if obj.alltimeofftype == 'Overtime':
 				obj.duration = decimal.Decimal(hr) * applicant.ratio
 			else:
 				obj.duration = my_round(dur)
@@ -333,7 +333,7 @@ def nonteacherapply(request):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
-			if nonteachertimeofftype == 'Overtime' or nonteachertimeofftype == 'Overtime Compensatory Leave':
+			if nonteachertimeofftype == 'Overtime':
 				duration = decimal.Decimal(hr) * userid.ratio
 			else:
 				duration = my_round(dur)
@@ -711,7 +711,7 @@ def applyforapply(request, *args, **kwargs):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
-			if nonteachertimeofftype == 'Overtime'  or nonteachertimeofftype == 'Overtime Compensatory Leave':
+			if nonteachertimeofftype == 'Overtime' :
 				duration = decimal.Decimal(hr) * userid.ratio
 			else:
 				duration = my_round(dur)
@@ -806,8 +806,8 @@ def applyforapply2(request, *args, **kwargs):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
-			if nonteachertimeofftype == 'Overtime' or nonteachertimeofftype == 'Overtime Compensatory Leave':
-				duration = hr * userid.ratio
+			if nonteachertimeofftype == 'Overtime' :
+				duration = decimal.Decimal(hr) * userid.ratio
 			else:
 				duration = my_round(dur)
 
@@ -1075,7 +1075,11 @@ def vpapprove(request, myid):
 	if request.method == 'POST':
 		u_form = SecondValidate(request.POST, instance=obj)
 		
-		if u_form.is_valid():		
+		if u_form.is_valid():
+			if  obj.secondstatus == 'Pending':	
+				u_form.save()
+				messages.warning(request, f'Please select a Decision')
+				return redirect(request.get_full_path())		
 			f = u_form.save(commit=False)
 			obj.pickvp = u_form.cleaned_data.get('pickvp')
 			obj.secondstatus = u_form.cleaned_data.get('secondstatus')
@@ -1143,6 +1147,10 @@ def secretaryapprove(request, myid):
 	if request.method == 'POST':	
 		u_form = SecretaryValidate(request.POST, instance=obj)
 		if u_form.is_valid():
+			if  obj.secretarystatus == 'Pending':	
+				u_form.save()
+				messages.warning(request, f'Please select a Decision')
+				return redirect(request.get_full_path())
 			if obj.finalduration is None:
 				modify = obj.duration
 				u_form.save()
