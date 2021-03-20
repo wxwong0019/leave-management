@@ -313,10 +313,17 @@ def nonteacherapply(request):
 					[pickvp.email],
 					)	
 
-			elif pickmanager != None and not user.is_supervisor:
+			elif pickmanager != None and not user.is_supervisor and not viceprincipal:
 				send_mail(
 				'Leave Application Confirmation' ,
 				'Hello '+pickmanager.username+ '. There is an application needs your attention. Please login and check under Manage Pending Application http://a.kachi.edu.hk/managerlistview/',
+				'test@gmail.com',
+				[pickmanager.email],
+				)
+			elif pickmanager != None and not user.is_supervisor and not superv:
+				send_mail(
+				'Leave Application Confirmation' ,
+				'Hello '+pickmanager.username+ '. There is an application needs your attention. Please login and check under Manage Pending Application http://a.kachi.edu.hk/vplistview/',
 				'test@gmail.com',
 				[pickmanager.email],
 				)
@@ -501,6 +508,7 @@ def supervisorapply(request, *args, **kwargs):
 			reason = form.cleaned_data.get('reason')
 			teachertimeofftype = form.cleaned_data.get('officialtype')
 			nonteachertimeofftype = form.cleaned_data.get('officialtype')
+			pickvp = form.cleaned_data.get('pickvp')
 			if(teachertimeofftype == None):
 				alltimeofftype = nonteachertimeofftype;
 			else:
@@ -526,7 +534,7 @@ def supervisorapply(request, *args, **kwargs):
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			duration = my_round(dur)
 			# Removed user = request.user to avoid double entry for profile page with group apply for the same user
-			f = LeaveApplication.objects.create(startdate=startdate, enddate=enddate, starttime=starttime, endtime=endtime, alltimeofftype=nonteachertimeofftype, reason=reason, firststatus = firststatus, secondstatus = secondstatus,appliedby=request.user, duration = duration ,groupapplystatus=True, period=period)
+			f = LeaveApplication.objects.create(startdate=startdate, enddate=enddate, starttime=starttime, endtime=endtime, alltimeofftype=nonteachertimeofftype, reason=reason, firststatus = firststatus, secondstatus = secondstatus,appliedby=request.user, duration = duration ,groupapplystatus=True, pickvp=pickvp, period=period)
 			f.users.set(alluser)
 			f.save()			
 			
@@ -624,6 +632,7 @@ def groupapplychangeview(request, myid):
 			obj.alluser = form.cleaned_data.get('users')
 			obj.appliedby = request.user
 			obj.period = form.cleaned_data.get('period')
+			obj.pickvp = form.cleaned_data.get('pickvp')
 			
 			def my_round(x):
 				return math.ceil(x*2)/2
@@ -1112,6 +1121,7 @@ def vpapprove(request, myid):
 			obj.secondstatus = u_form.cleaned_data.get('secondstatus')
 			obj.secondcomment = u_form.cleaned_data.get('secondcomment')
 			obj.secondapprovedby = request.user
+
 
 			obj.save()
 			

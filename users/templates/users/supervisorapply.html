@@ -37,12 +37,13 @@
                         <input type="checkbox" id="checkboxWholeDay" onclick="wholeDay()"/>
                         <label for="checkboxWholeDay">Whole Day (Optional)</label>
                     </div>
+                    <div >{{ form.pickvp|as_crispy_field }}</div>
                     <br />
                 </div>
                 <div class="period hide" id='periodId'>{{ form.period| as_crispy_field }}
                     <div style="font-weight: lighter; font-style: italic;"> * Hold control or command to select more</div> 
                 </div>
-               
+                
                     
                 
             </div>

@@ -225,13 +225,7 @@
             <th>From</th>
             <th>To</th>
             <th>Duration Approved</th>
-            {% if user.is_nonteacher %}
-            <th>Direct Supervisor</th>
-            {% endif %}
-            {% if not user.is_viceprincipal %}
-            <th>Vice Principal Decision</th>
-            {% endif %}
-            <th>Principal Decision</th>
+            <th>Final Decision</th>
             <th>Detail</th>
         </tr>
         {% for stuff in applicant %}
@@ -256,29 +250,10 @@
             {% else %}
             <td> {{ stuff.finalduration }} day(s)</td>
             {% endif %}
-            {% if user.is_nonteacher %}
-              {% if stuff.firststatus == "Pending" %}
-                <td style="color: orange"> {{ stuff.firststatus }}</td>
-              {% elif stuff.firststatus == "Approved" %}
-                <td style="color: green"> {{ stuff.firststatus }}</td>
-              {% else %}
-                <td style="color: red"> {{ stuff.firststatus }}</td>
-              {% endif %}
-
-            {% endif %}
-
-            {% if not user.is_viceprincipal %}
-              {% if stuff.secondstatus == "Pending" %}
-                <td style="color: orange"> {{ stuff.secondstatus }}</td>
-              {% elif stuff.secondstatus == "Approved" %}
-                <td style="color: green"> {{ stuff.secondstatus }}</td>
-              {% else %}
-                <td style="color: red"> {{ stuff.secondstatus }}</td>
-              {% endif %}
-            {% endif %}
+            
 
             {% if stuff.finalstatus == "Pending" %}
-              <td style="color: orange"> {{ stuff.finalstatus }}</td>
+              <td style="color: red"> Denied</td>
             {% elif stuff.finalstatus == "Approved" %}
               <td style="color: green"> {{ stuff.finalstatus }}</td>
             {% else %}
@@ -306,29 +281,10 @@
             {% else %}
             <td> {{ stuff.finalduration }} day(s)</td>
             {% endif %}
-            {% if user.is_nonteacher %}
-              {% if stuff.firststatus == "Pending" %}
-                <td style="color: orange"> {{ stuff.firststatus }}</td>
-              {% elif stuff.firststatus == "Approved" %}
-                <td style="color: green"> {{ stuff.firststatus }}</td>
-              {% else %}
-                <td style="color: red"> {{ stuff.firststatus }}</td>
-              {% endif %}
-
-            {% endif %}
-
-            {% if not user.is_viceprincipal %}
-              {% if stuff.secondstatus == "Pending" %}
-                <td style="color: orange"> {{ stuff.secondstatus }}</td>
-              {% elif stuff.secondstatus == "Approved" %}
-                <td style="color: green"> {{ stuff.secondstatus }}</td>
-              {% else %}
-                <td style="color: red"> {{ stuff.secondstatus }}</td>
-              {% endif %}
-            {% endif %}
+            
 
             {% if stuff.finalstatus == "Pending" %}
-              <td style="color: orange"> {{ stuff.finalstatus }}</td>
+              <td style="color: red"> Denied</td>
             {% elif stuff.finalstatus == "Approved" %}
               <td style="color: green"> {{ stuff.finalstatus }}</td>
             {% else %}

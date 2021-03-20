@@ -29,7 +29,9 @@
                     <div class="check">
                         <input type="checkbox" id="checkbox1" onclick="changeHideStatus()" />
                         <label for="checkbox1">Time Option</label>
-                    </div><br />
+                    </div>
+                    <div >{{ form.pickvp|as_crispy_field }}</div>
+                    <br />
                 </div>
                 <div class="period">{{ form.period| as_crispy_field }}</div>
             </div>

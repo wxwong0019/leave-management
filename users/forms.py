@@ -410,7 +410,8 @@ class GroupApplyForm(forms.ModelForm):
 		(ninth ,'9th'),
 		# (allday, 'Whole Day')
 	]
-
+	
+	pickvp = forms.ModelChoiceField(required=False,label ="Please Select Vice-Principal",queryset = User.objects.filter(is_viceprincipal = True))
 	period = forms.MultipleChoiceField(required=False,choices = PERIOD_CHOICES) 
 	users = forms.ModelMultipleChoiceField(label ="Applying for: (Include yourself if applicable)",queryset = User.objects.exclude(Q(is_principal = True ) | Q(is_secretary = True)).order_by('username'),widget=forms.SelectMultiple(attrs={
 						"onChange":"showSelectedValues(this)"
@@ -422,6 +423,7 @@ class GroupApplyForm(forms.ModelForm):
 			'teachertimeofftype',
 			"nonteachertimeofftype",
 			"users",
+			'pickvp',
 			"officialtype",
 			'startdate',
 			'starttime',
