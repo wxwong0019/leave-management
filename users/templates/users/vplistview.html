@@ -16,7 +16,7 @@
     
     {% if stuff.secondstatus == "Pending" and stuff.finalstatus == "Pending"  and not stuff.emergencystatus and stuff.teachertimeofftype != "Casual Leave" and stuff.firststatus != "Denied" and stuff.firststatus != "Canceled"%}
         {% if stuff.alltimeofftype == 'Official Leave (In School)' or stuff.alltimeofftype == 'Official Leave (Outside)' or stuff.alltimeofftype == 'Over Time' %}
-            {% if stuff.pickvp == user %}
+            {% if stuff.pickvp == user and not stuff.groupapplystatus %}
                 <tr class='table'>
                     <td><a href="{% url 'vpapprove' myid=stuff.id %}"> {{ stuff.secondstatus }}</td></a>
                     <td> {{ stuff.created_at }}</td>
