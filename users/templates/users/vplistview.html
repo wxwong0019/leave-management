@@ -44,7 +44,7 @@
                 </tr>
             {% endif %}
                
-            {% if stuff.groupapplystatus  %}
+            {% if stuff.groupapplystatus and stuff.pickvp == user %}
                 <tr class='table'>
                     <td><a href="{% url 'vpapprove' myid=stuff.id %}"> {{ stuff.secondstatus }}</td></a>
                     <td> {{ stuff.created_at }}</td>
