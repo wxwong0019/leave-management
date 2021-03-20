@@ -1112,7 +1112,7 @@ def vpapprove(request, myid):
 		u_form = SecondValidate(request.POST, instance=obj)
 		
 		if u_form.is_valid():
-			if  obj.secondstatus == 'Pending':	
+			if  obj.secondstatus == 'Pending' and obj.pickvp == request.user:	
 				u_form.save()
 				messages.warning(request, f'Please select a Decision')
 				return redirect(request.get_full_path())		
@@ -1568,17 +1568,26 @@ def plistviewdecided(req):
 def papprovedecided(request, myid):
 	obj = get_object_or_404(LeaveApplication, id =myid)
 	obj = LeaveApplication.objects.get(id=myid)
+	
+	if request.user.is_principal or request.user.is_secretary:	
+		getpid = request.user
+
+	if obj.groupapplystatus:
+		userid= obj.appliedby
+	else:
+		userid=obj.user
+
 	if request.user.is_principal or request.user.is_secretary:	
 		myuserid = request.user
-	userid = obj.user
-	if obj.user.is_secretary:
+	
+	if userid.is_secretary:
 		applicant = SecretaryDetail.objects.get(user = userid)
 	
-	elif obj.user.is_supervisor:
+	elif userid.is_supervisor:
 		applicant = SupervisorDetail.objects.get(user = userid)
-	elif obj.user.is_nonteacher:
+	elif userid.is_nonteacher:
 		applicant = NonTeachingStaffDetail.objects.get(user = userid)
-	elif obj.user.is_viceprincipal:
+	elif userid.is_viceprincipal:
 		applicant = VicePrincipalDetail.objects.get(user = userid)
 	else:
 		applicant = TeachingStaffDetail.objects.get(user = userid)
@@ -1790,14 +1799,19 @@ def alldetailview(request, myid):
 	obj = get_object_or_404(LeaveApplication, id =myid)
 	obj = LeaveApplication.objects.get(id=myid)
 
-	if obj.user.is_secretary:
+	if obj.groupapplystatus:
+		userid= obj.appliedby
+	else:
+		userid=obj.user
+
+	if userid.is_secretary:
 		applicant = SecretaryDetail.objects.get(user = obj.user)
 	
-	elif obj.user.is_supervisor:
+	elif userid.is_supervisor:
 		applicant = SupervisorDetail.objects.get(user = obj.user)
-	elif obj.user.is_nonteacher:
+	elif userid.is_nonteacher:
 		applicant = NonTeachingStaffDetail.objects.get(user = obj.user)
-	elif obj.user.is_viceprincipal:
+	elif userid.is_viceprincipal:
 		applicant = VicePrincipalDetail.objects.get(user = obj.user)
 	else:
 		applicant = TeachingStaffDetail.objects.get(user = obj.user)
