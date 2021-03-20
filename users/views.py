@@ -1805,16 +1805,16 @@ def alldetailview(request, myid):
 		userid=obj.user
 
 	if userid.is_secretary:
-		applicant = SecretaryDetail.objects.get(user = obj.user)
+		applicant = SecretaryDetail.objects.get(user = userid)
 	
 	elif userid.is_supervisor:
-		applicant = SupervisorDetail.objects.get(user = obj.user)
+		applicant = SupervisorDetail.objects.get(user = userid)
 	elif userid.is_nonteacher:
-		applicant = NonTeachingStaffDetail.objects.get(user = obj.user)
+		applicant = NonTeachingStaffDetail.objects.get(user = userid)
 	elif userid.is_viceprincipal:
-		applicant = VicePrincipalDetail.objects.get(user = obj.user)
+		applicant = VicePrincipalDetail.objects.get(user = userid)
 	else:
-		applicant = TeachingStaffDetail.objects.get(user = obj.user)
+		applicant = TeachingStaffDetail.objects.get(user = userid)
 
 	if request.method == 'POST':
 		nonteacherform = NonTeacherApplyForm(request.POST, instance=obj)
