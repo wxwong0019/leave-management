@@ -46,6 +46,9 @@
                     <p class="text-secondary"> {{ obj.secondcomment }}</p><br>
                     {% endif %}
                     <h5 class="account-heading">Principal Validation: {{ obj.finalstatus }}</h5>
+                    {% if obj.finalstatus != None %}
+                    <p class="text-secondary"> {{ obj.finalstatus }}</p><br>
+                    {% endif %}
                 </div>
             </div>
         </div>      </div>

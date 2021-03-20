@@ -1731,15 +1731,9 @@ def userdetailview(request, myid):
 	else:
 		userInfo = TeachingStaffDetail.objects.get(user = obj)
 
-	if obj.is_nonteacher:
-		applicant = LeaveApplication.objects.filter(user = obj)
-	elif obj.is_supervisor:
-		applicant = LeaveApplication.objects.filter(user = obj)
-	elif obj.is_viceprincipal:
-		applicant = LeaveApplication.objects.filter(user = obj)
-	else:
-		applicant = LeaveApplication.objects.filter(user = obj)
+	
 
+	applicant = LeaveApplication.objects.filter(Q(user=obj.user) | Q(users__in=[obj.user]))
 	
 	return render(request, "users/userdetailview.html", {
 			'obj' : obj, 
