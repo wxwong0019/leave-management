@@ -16,7 +16,7 @@
     
     {% if stuff.secondstatus == "Pending" and stuff.finalstatus == "Pending"  and not stuff.emergencystatus and stuff.teachertimeofftype != "Casual Leave" and stuff.firststatus != "Denied" and stuff.firststatus != "Canceled"%}
         {% if stuff.alltimeofftype == 'Official Leave (In School)' or stuff.alltimeofftype == 'Official Leave (Outside)' or stuff.alltimeofftype == 'Over Time' %}
-            {% if stuff.pickvp == user and not stuff.groupapplystatus %}
+            {% if stuff.pickvp == user %}
                 <tr class='table'>
                     <td><a href="{% url 'vpapprove' myid=stuff.id %}"> {{ stuff.secondstatus }}</td></a>
                     <td> {{ stuff.created_at }}</td>
@@ -44,32 +44,6 @@
                 </tr>
             {% endif %}
                
-            {% if stuff.groupapplystatus and stuff.pickvp == user %}
-                <tr class='table'>
-                    <td><a href="{% url 'vpapprove' myid=stuff.id %}"> {{ stuff.secondstatus }}</td></a>
-                    <td> {{ stuff.created_at }}</td>
-                    <td> {% for each in stuff.users.all %}{{ each }}<br/>{% empty %}{{ stuff.user.username }} {% endfor %} </td>
-                    <td> {{ stuff.alltimeofftype }}</td>
-                    {% if stuff.starttime == None and stuff.endtime == None %}
-                    <td> {{ stuff.startdate}}</td>
-                    <td> {{ stuff.enddate}}</td>
-                    {% else %}
-                    <td> {{ stuff.startdate}} ({{ stuff.starttime }})</td>
-                    <td> {{ stuff.enddate}} ({{ stuff.endtime }})</td>
-                    {% endif %}
-                    {% if stuff.firststatus == None or stuff.user.NonTeachingStaffDetail.supervisor == None or stuff.user.is_teacher %}
-                    <td class = "text-muted"> Not Applicable</td>
-                    {% else %}
-                     {% if stuff.firststatus == "Pending" %}
-                            <td style="color: orange"> {{ stuff.firststatus }}</td>
-                        {% elif stuff.firststatus == "Approved" %}
-                            <td style="color: green"> {{ stuff.firststatus }}</td>
-                        {% else %}
-                            <td style="color: red"> {{ stuff.firststatus }}</td>
-                        {% endif %}
-                    {% endif %}
-                </tr>
-            {% endif %}
         {% else %}
         <tr class='table'>
             <td><a href="{% url 'vpapprove' myid=stuff.id %}"> {{ stuff.secondstatus }}</td></a>
