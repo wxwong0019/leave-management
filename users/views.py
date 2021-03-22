@@ -361,7 +361,7 @@ def nonteacherapply(request):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
-			if period != None:
+			if period != []:
 				dur = len(period)/8
 
 
@@ -440,7 +440,7 @@ def teacherapply(request):
 				dur = (end_date - start_date).days + (end_time-start_time)/9
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
-			if period != None:
+			if period != []:
 				dur = len(period)/8
 
 			duration = my_round(dur)
@@ -540,7 +540,7 @@ def supervisorapply(request, *args, **kwargs):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
-			if period != None:
+			if period != []:
 				dur = len(period)/8
 
 			duration = my_round(dur)
@@ -660,7 +660,7 @@ def groupapplychangeview(request, myid):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
-			if obj.period != None:
+			if obj.period != []:
 				dur = len(obj.period)/8
 
 			obj.duration = my_round(dur)
