@@ -25,16 +25,16 @@
                     {% endif %}
                     {% if obj.nonteachertimeofftype == 'Overtime' or  obj.nonteachertimeofftype == 'Overtime Compensatory Leave' %}
                         {% if obj.finalduration == None %}
-                            <p class="text-secondary">Estimated Hour (calculated By AI, will be verified by Human) : {{ obj.duration }} hr(s)</p>
+                            <p class="text-secondary">Estimated Hour (Being verified by School) : {{ obj.duration }} hr(s)</p>
                         {% else %}
-                             <p class="text-secondary">Approved Hour (Verified By Human) : {{ obj.finalduration }} hr(s)</p>
+                             <p class="text-secondary">Approved Hour (Verified by School) : {{ obj.finalduration }} hr(s)</p>
                         {% endif %}
                         
                     {% else %}
                         {% if obj.finalduration == None %}
-                            <p class="text-secondary">Estimated Day (calculated By AI, will be verified by Human): {{ obj.duration }} day(s)</p>
+                            <p class="text-secondary">Estimated Day (Being verified by School): {{ obj.duration }} day(s)</p>
                         {% else %}
-                             <p class="text-secondary">Approved Day (Verified By Human) : {{ obj.finalduration }} day(s)</p>
+                             <p class="text-secondary">Approved Day (Verified by School) : {{ obj.finalduration }} day(s)</p>
                         {% endif %}
                     
                     {% endif %}

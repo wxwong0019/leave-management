@@ -361,6 +361,10 @@ def nonteacherapply(request):
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
+			if period != None:
+				dur = len(period)/8
+
+
 			if nonteachertimeofftype == 'Overtime':
 				duration = decimal.Decimal(hr) * userid.ratio
 			elif nonteachertimeofftype == 'Overtime Compensatory Leave':
@@ -436,6 +440,9 @@ def teacherapply(request):
 				dur = (end_date - start_date).days + (end_time-start_time)/9
 				hr = (end_date - start_date).days*24 + end_time-start_time
 			
+			if period != None:
+				dur = len(period)/8
+
 			duration = my_round(dur)
 
 			a_form = LeaveApplication.objects.create(startdate=startdate, enddate=enddate, starttime=starttime, endtime=endtime, teachertimeofftype=teachertimeofftype, alltimeofftype=teachertimeofftype, reason=reason, firststatus = firststatus, secondstatus = secondstatus, user=user, stafftype=stafftype, pickvp=pickvp,duration=duration, period=period)
@@ -532,6 +539,10 @@ def supervisorapply(request, *args, **kwargs):
 				end_time = endtime.hour + endtime.minute/60
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
+			
+			if period != None:
+				dur = len(period)/8
+
 			duration = my_round(dur)
 			# Removed user = request.user to avoid double entry for profile page with group apply for the same user
 			f = LeaveApplication.objects.create(startdate=startdate, enddate=enddate, starttime=starttime, endtime=endtime, alltimeofftype=nonteachertimeofftype, reason=reason, firststatus = firststatus, secondstatus = secondstatus,appliedby=request.user, duration = duration ,groupapplystatus=True, pickvp=pickvp, period=period)
@@ -648,6 +659,10 @@ def groupapplychangeview(request, myid):
 				end_time = obj.endtime.hour + obj.endtime.minute/60
 				dur = (end_date - start_date).days + (end_time-start_time)/8
 				hr = (end_date - start_date).days*24 + end_time-start_time
+			
+			if obj.period != None:
+				dur = len(obj.period)/8
+
 			obj.duration = my_round(dur)
 			
 			# f = LeaveApplication.objects.update(startdate=startdate, enddate=enddate, starttime=starttime, endtime=endtime, alltimeofftype=nonteachertimeofftype, reason=reason, firststatus = firststatus, secondstatus = secondstatus, user= request.user,appliedby=request.user, duration = duration ,groupapplystatus=True, period=period)
@@ -1742,7 +1757,7 @@ def userdetailview(request, myid):
 
 	
 
-	applicant = LeaveApplication.objects.filter(Q(user=obj.user) | Q(users__in=[obj.user]))
+	applicant = LeaveApplication.objects.filter(Q(user=obj) | Q(users__in=[obj]))
 	
 	return render(request, "users/userdetailview.html", {
 			'obj' : obj, 
