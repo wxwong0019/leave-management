@@ -14,7 +14,7 @@
             <div class='colforapplyandbalance'>
                 <div class='colapply'>
                    
-                    <h4> {{ obj.alltimeofftype }} {% if obj.nonteacherchangetimeofftype != None %} changed to obj.nonteacherchangetimeofftype {% elif obj.teacherchangetimeofftype != None %} changed to obj.teacherchangetimeofftype {% endif %} </h4>
+                    <h4> {{ obj.alltimeofftype }} {% if obj.nonteacherchangetimeofftype != None %} changed to {{obj.nonteacherchangetimeofftype}} {% elif obj.teacherchangetimeofftype != None %} changed to {{obj.teacherchangetimeofftype}} {% endif %} </h4>
 
                     {% if obj.starttime != None and obj.endtime != None %}
                     <p class="text-secondary">From : {{ obj.startdate }} - {{ obj.starttime }}</p>
@@ -23,7 +23,7 @@
                     <p class="text-secondary">From : {{ obj.startdate }}</p>
                     <p class="text-secondary">To : {{ obj.enddate }}</p>
                     {% endif %}
-                    {% if obj.nonteachertimeofftype == 'Overtime' or  obj.nonteachertimeofftype == 'Overtime Compensatory Leave' or obj.nonteacherchangetimeofftype == "Overtime" %}
+                    {% if obj.nonteachertimeofftype == 'Overtime' or  obj.nonteachertimeofftype == 'Overtime Compensatory Leave' or obj.nonteacherchangetimeofftype == "Overtime Compensatory Leave" %}
                         {% if obj.finalstatus != "Approved" %}
                             <p class="text-secondary">Estimated Hour (Being verified by School) : {{ obj.duration }} hr(s)</p>
                         {% else %}
