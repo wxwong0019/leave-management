@@ -19,13 +19,13 @@
                     <p class="text-secondary">To : {{ obj.enddate }}</p>
                     {% endif %}
                     {% if obj.nonteachertimeofftype == 'Overtime' or obj.nonteachertimeofftype == 'Overtime Compensatory Leave' %}
-                    <p class="text-secondary">Estimated Hour (hrs): {{ obj.duration }}</p>
-                    {% else %}
-                    <p class="text-secondary">Estimated Day (days): {{ obj.duration }}</p>
+                    <p class="text-primary font-weight-bold">Estimated Hour (Being verified by School) : {{ obj.duration }} hr(s)</p>
+          {% else %}
+            <p class="text-primary font-weight-bold">Estimated Day (Being verified by School): {{ obj.duration }} day(s)</p>
                     {% endif %}
                     <p class="text-secondary"> Reason : {{ obj.reason }}</p>
                     {% if obj.period != "[]" %}
-                    <p class="font-weight-bold"> Period : {{ obj.period}}</p>
+                    <p class="font-weight-bold text-primary"> Period : {{ obj.period}}</p>
                     {% endif %}<br>
                     {% if obj.user.is_nonteacher %}
                     <h5 class="account-heading">Supervisor Validation: {{ obj.firststatus }}</h5>

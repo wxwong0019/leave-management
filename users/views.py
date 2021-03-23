@@ -1366,8 +1366,21 @@ def papprove(request, myid):
 								obj.save()
 								messages.success(request, f'Sucessfully Approved')
 						else:
-							u_form.save()
-							messages.success(request, f'Sucessfully Approved')
+							if obj.finalduration is None:
+								modify = obj.duration
+								u_form.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+							else:
+								modify = obj.finalduration
+								u_form.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+							
 					elif obj.nonteacherchangetimeofftype == 'Annual Leave':  #change leave type for non teacher
 
 						if obj.finalduration is None:
@@ -1469,8 +1482,20 @@ def papprove(request, myid):
 								obj.save()
 								messages.success(request, f'Sucessfully Approved')
 						else:
-							u_form.save()
-							messages.success(request, f'Sucessfully Approved')
+							if obj.finalduration is None:
+								modify = obj.duration
+								u_form.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
+							else:
+								modify = obj.finalduration
+								u_form.save()
+								obj.finalduration = modify
+								obj.updated_at = datetime.datetime.now()
+								obj.save()
+								messages.success(request, f'Sucessfully Approved')
 					elif obj.teacherchangetimeofftype == 'No-Pay Leave':  #change leave type for non teacher
 						if obj.finalduration is None:
 							modify = obj.duration
@@ -1784,7 +1809,7 @@ def alllistview(req):
 		response['Content-Disposition'] = 'attachment; filename="LeaveExport.csv"' 
 		response.write(u'\ufeff'.encode('utf8'))
 		writer = csv.writer(response) 
-		writer.writerow(['Apply Date/Time', 'Name', 'Leave Type', 'From Date', 'From Time', 'To Date', 'To Time','Duration' ,'Supervisor Decision', 'Vice Principal Decision', 'Principal Decision','Date Approved', 'Remark', 'Reason']) 
+		writer.writerow(['Apply Date/Time', 'Name', 'Leave Type', 'From Date', 'From Time', 'To Date', 'To Time','Duration','Period' ,'Supervisor Decision', 'Vice Principal Decision', 'Principal Decision','Date Approved', 'Remark', 'Reason']) 
 		instance = queryset 
 
 
@@ -1800,7 +1825,7 @@ def alllistview(req):
 				for stuff in row.users.all():
 					userlist += str(stuff)+ " "
 			
-			writer.writerow([row.created_at_date, userlist, row.alltimeofftype, row.startdate, row.starttime, row.enddate, row.endtime, row.finalduration, first_status, second_status, row.finalstatus, row.updated_at, row.finalcomment, row.reason]) 
+			writer.writerow([row.created_at_date, userlist, row.alltimeofftype, row.startdate, row.starttime, row.enddate, row.endtime, row.finalduration,row.period, first_status, second_status, row.finalstatus, row.updated_at, row.finalcomment, row.reason]) 
 		return response 
 	context = {
 		"myFilter" : myFilter,
