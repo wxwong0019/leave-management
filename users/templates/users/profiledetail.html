@@ -63,7 +63,7 @@
             </div>
         </div>      </div>
     
-    {% if obj.finalstatus == "Pending" and obj.secondstatus == "Pending" and obj.firststatus == "Pending"%}
+    {% if obj.finalstatus == "Pending" and obj.secondstatus == "Pending" and obj.firststatus == "Pending" and user.is_nonteacher %}
 
         {% if obj.appliedby == None %}
         <div class="content-section-forapply">
@@ -144,7 +144,7 @@
 
         {% endif %}
 
-    {% elif obj.finalstatus == "Pending" and obj.secondstatus == "Approved" and obj.is_viceprincipal or obj.finalstatus == "Pending" and obj.secondstatus == "Pending" and obj.firststatus == "Approved" and obj.is_supervisor %}
+    {% elif obj.finalstatus == "Pending" and obj.secondstatus == "Approved" and user.is_viceprincipal or obj.finalstatus == "Pending" and obj.secondstatus == "Pending" and obj.firststatus == "Approved" and user.is_teacher %}
 
     {% if obj.appliedby == None %}
     <div class="content-section-forapply">
@@ -225,85 +225,7 @@
 
     {% endif %}
 
-      
-      
-    {% if obj.appliedby == None %}
-    <form method='POST' enctype="multipart/form-data">
-        {% csrf_token %}
-        <fieldset class='form-group'>
-            <div style="color: red; font-weight: bold;">{{ form.non_field_errors }}</div>
-            <h3 id='leavetitle'>Modify Leave Request</h3>
-            <small class='text-muted' id='thankyou'></small>
-            <hr>
-            <div class='colforapplyandbalance'>
-                <div class='colapply'>
-                    <!-- <legend class='border-bottom mb-4'> Ka Chi Staff Register </legend> -->
-                    {% if user.is_teacher %}
-                    <div class="starttimefield">{{ form.teachertimeofftype|as_crispy_field }}</div>
-                    {% else %}
-                    <div class="starttimefield">{{ form.nonteachertimeofftype|as_crispy_field }}</div>
-                    {% endif %}
-                    <div class="start">
-                        <div class="starttimefield">{{ form.startdate|as_crispy_field }}</div>
-                        <div class="starttimefield hide" id='input1'>{{ form.starttime|as_crispy_field }}</div>
-                    </div>
-                    <div class="end">
-                        <div class="endtimefield">{{ form.enddate|as_crispy_field }}</div>
-                        <div class="endtimefield hide" id='input2'>{{ form.endtime|as_crispy_field }}</div>
-                    </div>
-                    <div class="check">
-                        <input type="checkbox" id="checkbox1" onclick="changeHideStatus()" />
-                        <label for="checkbox1">Time Option</label>
-                    </div>
-                    {% if user.is_teacher %}
-                    {% if user.is_viceprincipal %}
-                    {% else %}
-                    <div id="hidden_div">{{ form.pickvp|as_crispy_field }}</div>
-                    {% endif %}
-                    {% else %}
-                    <div id="hidden_div">
-                        {{ form.pickvp|as_crispy_field }}
-                        {{ form.pickmanager|as_crispy_field }}
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="period">{{ form.period| as_crispy_field }}</div>
-                
-            </div>
-            <div class="reason">{{ form.reason|as_crispy_field }}</div>
-            
-        </fieldset>
-        <div class='form-group'>
-            <button name="modify" type="submit" class="btn btn-danger">Modify</button>
-        </div>
-    </form>
-    {% endif %}
-
-      <hr>
-    {% if obj.groupapplystatus == False %}
-      <form method = 'POST' enctype='multipart/form-data' onsubmit="return confirm('Just want to make sure DID YOU DOUBLE CHECK?');"> 
-        {% csrf_token %}
-        <fieldset class='form-group'>
-          <legend class='border-bottom mb-4'> Withdraw Application </legend>
-          {{ u_form|crispy }}
-
-        </fieldset>
-        <div class='form-group'>
-          <button name="cancel" type="submit" class="btn btn-danger" onclick="return confirm(' WARNING : Do you really want to withdraw?');" >Withdraw</button>
-        </div>
-      </form>
-    {% else %}
-      <form> 
-        <fieldset class='form-group'>
-          <legend class='border-bottom mb-4'> Withdraw Application </legend>
-          <div style="font-weight: lighter; ">**Please contact Secretary to Withdraw**</div>
-        </fieldset>
-        <div class='form-group'>
-          <button type="submit" class="btn btn-danger" disabled="">Withdraw</button>
-        </div>
-      </form>
-
-    {% endif %}
+    
     {% elif obj.finalstatus == "Canceled"%}
 
     {% else %}
