@@ -176,6 +176,7 @@ def profiledetail(request, myid):
 			messages.success(request, f'Modified!')
 			return redirect('profile')	
 		elif u_form.is_valid() and 'cancel' in request.POST:
+			user = request.user
 			if obj.finalstatus == "Pending" and obj.secondstatus == "Pending" and obj.firststatus == "Pending" and user.is_nonteacher:
 				obj.firststatus = "Canceled"
 				obj.secondstatus = "Canceled"
