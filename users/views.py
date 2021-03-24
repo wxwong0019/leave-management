@@ -176,8 +176,23 @@ def profiledetail(request, myid):
 			messages.success(request, f'Modified!')
 			return redirect('profile')	
 		elif u_form.is_valid() and 'cancel' in request.POST:
-			if obj.finalstatus == "Pending" and obj.secondstatus == "Pending" and obj.firststatus == "Pending":
-
+			if obj.finalstatus == "Pending" and obj.secondstatus == "Pending" and obj.firststatus == "Pending" and user.is_nonteacher:
+				obj.firststatus = "Canceled"
+				obj.secondstatus = "Canceled"
+				obj.finalstatus = "Canceled"
+				u_form.save()
+				obj.save()
+				messages.success(request, f'Success')
+				return redirect('profile')	
+			elif obj.finalstatus == "Pending" and obj.secondstatus == "Approved" and obj.firststatus == "Approved" and user.is_viceprincipal:
+				obj.firststatus = "Canceled"
+				obj.secondstatus = "Canceled"
+				obj.finalstatus = "Canceled"
+				u_form.save()
+				obj.save()
+				messages.success(request, f'Success')
+				return redirect('profile')
+			elif obj.finalstatus == "Pending" and obj.secondstatus == "Pending" and obj.firststatus == "Approved" and user.is_teacher:
 				obj.firststatus = "Canceled"
 				obj.secondstatus = "Canceled"
 				obj.finalstatus = "Canceled"
