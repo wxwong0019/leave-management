@@ -1860,9 +1860,10 @@ def alldetailview(request, myid):
 	else:
 		userid=obj.user
 
+	print("userid IS")
+	print(obj.appliedby)
 	if userid.is_secretary:
 		applicant = SecretaryDetail.objects.get(user = userid)
-	
 	elif userid.is_supervisor:
 		applicant = SupervisorDetail.objects.get(user = userid)
 	elif userid.is_nonteacher:
@@ -1872,13 +1873,17 @@ def alldetailview(request, myid):
 	else:
 		applicant = TeachingStaffDetail.objects.get(user = userid)
 
+
 	if request.method == 'POST':
 		nonteacherform = NonTeacherApplyForm(request.POST, instance=obj)
 		teacherform = TeacherApplyForm(request.POST, instance=obj)
-		if obj.user.is_nonteacher:
-			form = NonTeacherApplyForm(request.POST, instance=obj)
+		if not obj.groupapplystatus:
+			if obj.user.is_nonteacher:
+				form = NonTeacherApplyForm(request.POST, instance=obj)
+			else:
+				form = TeacherApplyForm(request.POST, instance=obj)
 		else:
-			form = TeacherApplyForm(request.POST, instance=obj)	
+			form = GroupApplyForm(request.POST, None)
 		g_form = GroupApplyForm(request.POST, instance=obj)
 		u_form = UserCancelForm(request.POST, instance=obj)
 		
@@ -1905,7 +1910,7 @@ def alldetailview(request, myid):
 			applicant.save()
 			messages.success(request, f'Sucessfully Approved')
 			return redirect('alllistview')
-		if obj.user.is_nonteacher and nonteacherform.is_valid() and 'modify' in request.POST:
+		if not obj.groupapplystatus and obj.user.is_nonteacher and nonteacherform.is_valid() and 'modify' in request.POST:
 			nonteacherform.save()
 			# p = pickform.save(commit=False)
 			obj.startdate = nonteacherform.cleaned_data.get('startdate')
@@ -1963,7 +1968,7 @@ def alldetailview(request, myid):
 			obj.save()
 			messages.success(request, f'Redirects to Approval page for this application')
 			return redirect('secretaryapprove', myid=myid)
-		if obj.user.is_teacher and teacherform.is_valid() and 'modify' in request.POST:
+		if not obj.groupapplystatus and obj.user.is_teacher and teacherform.is_valid() and 'modify' in request.POST:
 			teacherform.save()
 			# p = pickform.save(commit=False)
 			obj.startdate = teacherform.cleaned_data.get('startdate')
@@ -2015,24 +2020,23 @@ def alldetailview(request, myid):
 			obj.save()
 			messages.success(request, f'Redirects to Approval page for this application')
 			return redirect('secretaryapprove', myid=myid)
-		if g_form.is_valid() and 'modifygroup' in request.POST:	
+		if obj.groupapplystatus and g_form.is_valid() and 'modifygroup' in request.POST:	
 			g_form.save()
 			# p = pickform.save(commit=False)
-			obj.startdate = form.cleaned_data.get('startdate')
-			obj.enddate = form.cleaned_data.get('enddate')
-			obj.starttime = form.cleaned_data.get('starttime')
-			obj.endtime = form.cleaned_data.get('endtime')
-			obj.reason = form.cleaned_data.get('reason')
-			obj.teachertimeofftype = form.cleaned_data.get('officialtype')
-			obj.nonteachertimeofftype = form.cleaned_data.get('officialtype')
+			obj.startdate = g_form.cleaned_data.get('startdate')
+			obj.enddate = g_form.cleaned_data.get('enddate')
+			obj.starttime = g_form.cleaned_data.get('starttime')
+			obj.endtime = g_form.cleaned_data.get('endtime')
+			obj.reason = g_form.cleaned_data.get('reason')
+			obj.teachertimeofftype = g_form.cleaned_data.get('officialtype')
+			obj.nonteachertimeofftype = g_form.cleaned_data.get('officialtype')
 			if(obj.teachertimeofftype == None):
 				obj.alltimeofftype = obj.nonteachertimeofftype;
 			else:
 				obj.alltimeofftype = obj.teachertimeofftype;
 			
-			obj.alluser = form.cleaned_data.get('users')
-			obj.appliedby = request.user
-			obj.period = form.cleaned_data.get('period')
+			obj.alluser = g_form.cleaned_data.get('users')
+			obj.period = g_form.cleaned_data.get('period')
 			
 			def my_round(x):
 				return math.ceil(x*2)/2
@@ -2055,11 +2059,14 @@ def alldetailview(request, myid):
 		teacherform = TeacherApplyForm(instance=obj)
 		g_form = GroupApplyForm(instance=obj)
 		u_form = UserCancelForm(instance=obj)
+		
+		form = GroupApplyForm(instance=obj)
 		if request.user.is_nonteacher:
 			form = NonTeacherApplyForm( instance=obj)
 		else:
 			form = TeacherApplyForm( instance=obj)
-	context = {
+
+	return render(request, 'users/alldetailview.html', {
 		'obj' : obj,
 		'u_form' : u_form,
 		'form' : form,
@@ -2067,8 +2074,7 @@ def alldetailview(request, myid):
 		'applicant':applicant,
 		'nonteacherform':nonteacherform,
 		'teacherform':teacherform
-	}
-	return render(request, 'users/alldetailview.html', context)
+	})
 
 @login_required
 def documentlistview(req):

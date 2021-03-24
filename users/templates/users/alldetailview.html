@@ -263,6 +263,54 @@
                     console.log("test6");
                 }
             }
+            function textAreaAdjust() {
+              element = document.getElementById("display");
+              element.style.height = "1px";
+              element.style.height = (25+element.scrollHeight)+"px";
+            }
+            document.getElementById("id_users").addEventListener("click", textAreaAdjust);
+            function getSelectedOptions(sel, fn) {
+                var opts = [],
+                    opt;
+
+                // loop through options in select list
+                for (var i = 0, len = sel.options.length; i < len; i++) {
+                    opt = sel.options[i];
+
+                    // check if selected
+                    if (opt.selected) {
+                        // add to array of option elements to return from this function
+                        opts.push(opt);
+
+                        // invoke optional callback function if provided
+                        if (fn) {
+                            fn(opt);
+                        }
+                    }
+                }
+
+                // return array containing references to selected option elements
+                return opts;
+            }
+
+            function callback(opt) {
+                var display = document.getElementById('display');
+                display.innerHTML += opt.text + " \n";
+
+            }
+
+            function showSelectedValues(sel) {
+                // get reference to display textarea
+                var display = document.getElementById('display');
+                display.innerHTML = ''; // reset
+
+                // callback fn handles selected options
+                getSelectedOptions(sel, callback);
+
+                // remove ', ' at end of string
+                var str = display.innerHTML.slice(0, -2);
+                display.innerHTML = str;
+            };
             </script>
  </div>
 {% endblock %}
