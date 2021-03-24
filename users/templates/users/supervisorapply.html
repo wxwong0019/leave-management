@@ -73,13 +73,18 @@
                 $(showDiv('hidden_div', document.getElementById("id_teachertimeofftype")));
                 $(changeHideStatus());
                 $(console.log("checking else"));
-                $("#id_pickvp").prop("selectedIndex","");
+                $("#id_pickvp").prop("selectedIndex",2);
                 $("#id_pickmanager").prop("selectedIndex","");
                 $("#id_pickmanager").prop("required",false);
-                $("#id_pickvp").prop("required",false);
+                $(vprequired());
             });
             let input1;
             let input2;
+
+            function vprequired(){
+                document.getElementById("id_pickvp").required = true;
+                console.log("ts")
+            }
 
             function submiting(){
                 document.getElementById("myButton").setAttribute("disabled","");
