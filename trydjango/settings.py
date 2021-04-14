@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '@4rfg3lti(a8c&w5g31mlu7df%jw-$n(i3%mquyoh#d9zkgk$g$+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['kachi-ileave.herokuapp.com', '127.0.0.1']
 
@@ -183,13 +183,15 @@ REST_FRAMEWORK = {
 # DEFAULT_FROM_EMAIL = 'iLeave.AutoResponse@gmail.com'
 # EMAIL_USE_TLS = True
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# # EMAIL_PORT = '587'
 # EMAIL_PORT = '587'
-EMAIL_PORT = '587'
-EMAIL_HOST_USER = 'iLeave.AutoResponse@gmail.com'
-EMAIL_HOST_PASSWORD = "u4PU88Fgt28dmdSafs9h%&TB&ftb9&WTF&(WT(&BFTist(&AWBG(P&B&Abs79BTFW&(T&FTBAS&(stbfP(&WT(&BT"
-EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'iLeave.AutoResponse@gmail.com'
+# EMAIL_HOST_PASSWORD = "u4PU88Fgt28dmdSafs9h%&TB&ftb9&WTF&(WT(&BFTist(&AWBG(P&B&Abs79BTFW&(T&FTBAS&(stbfP(&WT(&BT"
+# EMAIL_USE_TLS = True
 
 # ACCOUNT_EMAIL_VERIFICATION = 'none'
 
